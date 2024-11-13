@@ -2,17 +2,18 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button"; // Importation du composant Button de Shadcn
+import { Card } from "@/components/ui/card"; // Importation du composant Card de Shadcn
+import { ToastContainer, toast } from 'react-toastify'; // Importation de Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Styles de Toastify
+import { Skeleton } from "@/components/ui/skeleton"; // Importation du composant Skeleton
 
 interface Materiel {
-  typeMateriel: string;
+  typeMateriel: string;  // Remplacé "nom" par "typeMateriel"
   marque: string;
   modele: string;
   numeroSerie: string;
+  typeMateriel: string;
   dateInstallation: string;
 }
 
@@ -32,10 +33,11 @@ const getCurrentDate = () => {
 };
 
 const initialMateriel: Materiel = {
-  typeMateriel: '',
+  typeMateriel: '', // Remplacé "nom" par "typeMateriel"
   marque: '',
   modele: '',
   numeroSerie: '',
+  typeMateriel: '',  // Remplacé "nom" par "typeMateriel"
   dateInstallation: getCurrentDate()
 };
 
@@ -103,16 +105,11 @@ export default function CreateInstallation() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">Créer une nouvelle installation</h1>
+
         {error && (
           <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-md" role="alert">
             <div className="flex">
@@ -127,33 +124,80 @@ export default function CreateInstallation() {
             </div>
           </div>
         )}
+
         <form onSubmit={handleSubmit} className="bg-white shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="nom" className="block text-sm font-medium text-gray-700">Nom de l'installation</label>
-              <input id="nom" type="text" name="nom" value={formData.nom} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
+              <input
+                id="nom"
+                type="text"
+                name="nom"
+                value={formData.nom}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div>
               <label htmlFor="organisation" className="block text-sm font-medium text-gray-700">Organisation</label>
-              <input id="organisation" type="text" name="organisation" value={formData.organisation} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
+              <input
+                id="organisation"
+                type="text"
+                name="organisation"
+                value={formData.organisation}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div>
               <label htmlFor="client" className="block text-sm font-medium text-gray-700">Client</label>
-              <input id="client" type="text" name="client" value={formData.client} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
+              <input
+                id="client"
+                type="text"
+                name="client"
+                value={formData.client}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div>
               <label htmlFor="boutique" className="block text-sm font-medium text-gray-700">Boutique</label>
-              <input id="boutique" type="text" name="boutique" value={formData.boutique} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
+              <input
+                id="boutique"
+                type="text"
+                name="boutique"
+                value={formData.boutique}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div>
               <label htmlFor="numeroFacture" className="block text-sm font-medium text-gray-700">Numéro de facture</label>
-              <input id="numeroFacture" type="text" name="numeroFacture" value={formData.numeroFacture} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
+              <input
+                id="numeroFacture"
+                type="text"
+                name="numeroFacture"
+                value={formData.numeroFacture}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div>
               <label htmlFor="dateFacture" className="block text-sm font-medium text-gray-700">Date de facture</label>
-              <input id="dateFacture" type="date" name="dateFacture" value={formData.dateFacture} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
+              <input
+                id="dateFacture"
+                type="date"
+                name="dateFacture"
+                value={formData.dateFacture}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
           </div>
+
           <div className="mt-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Matériels</h2>
             {formData.materiels.map((materiel, index) => (
@@ -172,7 +216,6 @@ export default function CreateInstallation() {
                           name={`materiel-${key}`}
                           value={value}
                           onChange={(e) => handleChange(e, index)}
-                          onKeyDown={handleKeyDown}
                           required
                           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
                         />
@@ -181,22 +224,37 @@ export default function CreateInstallation() {
                   ))}
                 </div>
                 {formData.materiels.length > 1 && (
-                  <Button variant="destructive" onClick={() => removeMateriel(index)} className="mt-4">
+                  <Button
+                    variant="destructive"
+                    onClick={() => removeMateriel(index)}
+                    className="mt-4"
+                  >
                     Supprimer ce matériel
                   </Button>
                 )}
               </Card>
             ))}
-            <Button variant="outline" onClick={addMateriel} className="mt-4">
+            <Button
+              variant="outline"
+              onClick={addMateriel}
+              className="mt-4"
+            >
               Ajouter un matériel
             </Button>
           </div>
+
           <div className="mt-8">
-            <Button type="submit" disabled={loading} className="w-full py-2 px-4">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2 px-4"
+            >
               {loading ? 'Création en cours...' : 'Créer l\'installation'}
             </Button>
           </div>
         </form>
+
+        {/* Toast notifications container */}
         <ToastContainer />
       </div>
     </div>

@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
 
 const prisma = new PrismaClient();
 
@@ -21,6 +19,11 @@ interface InstallationData {
   numeroFacture?: string;
   dateFacture?: string;
   materiels: Materiel[];
+}
+
+function convertDateFormat(dateString: string): string {
+  const [day, month, year] = dateString.split('/');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
 // Méthode GET pour récupérer toutes les installations
@@ -45,20 +48,22 @@ export async function POST(req: Request) {
 
     console.log('Données reçues:', data);
 
+    // Validation des données reçues
     if (!data || !data.nom || !data.client || !data.boutique || !data.materiels || !Array.isArray(data.materiels)) {
       return NextResponse.json({ error: 'Données manquantes ou incorrectes' }, { status: 400 });
     }
 
-    // Formatage des dates pour assurer le format français
-    const formatDateToFrench = (date: string) => {
-      return format(new Date(date), 'dd/MM/yyyy', { locale: fr });
-    };
+    // Validation supplémentaire pour la date d'installation
+    for (const materiel of data.materiels) {
+      if (!/^\d{2}\/\d{2}\/\d{4}$/.test(materiel.dateInstallation)) {
+        return NextResponse.json({ error: 'Format de date d\'installation invalide. Utilisez DD/MM/YYYY.' }, { status: 400 });
+      }
+    }
 
-    const formattedDateFacture = data.dateFacture ? formatDateToFrench(data.dateFacture) : null;
-    const formattedMateriels = data.materiels.map((materiel) => ({
-      ...materiel,
-      dateInstallation: formatDateToFrench(materiel.dateInstallation),
-    }));
+    // Validation de la date de facture si elle est fournie
+    if (data.dateFacture && !/^\d{4}-\d{2}-\d{2}$/.test(data.dateFacture)) {
+      return NextResponse.json({ error: 'Format de date de facture invalide. Utilisez YYYY-MM-DD.' }, { status: 400 });
+    }
 
     // Création de l'installation dans la base de données
     const newInstallation = await prisma.installation.create({
@@ -68,15 +73,15 @@ export async function POST(req: Request) {
         boutique: data.boutique,
         organisation: data.organisation || '',
         numeroFacture: data.numeroFacture,
-        dateFacture: formattedDateFacture ? new Date(formattedDateFacture) : null,
+        dateFacture: data.dateFacture ? new Date(data.dateFacture) : null,
         status: 'ACTIVE',
         materiels: {
-          create: formattedMateriels.map((materiel) => ({
+          create: data.materiels.map((materiel) => ({
             marque: materiel.marque,
             modele: materiel.modele,
             numeroSerie: materiel.numeroSerie,
             typeMateriel: materiel.typeMateriel,
-            dateInstallation: new Date(materiel.dateInstallation),
+            dateInstallation: new Date(convertDateFormat(materiel.dateInstallation)),
           })),
         },
       },
@@ -86,15 +91,13 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(newInstallation, { status: 201 });
+    
   } catch (error) {
     console.error('Erreur lors de la création de l\'installation:', error.message || error);
-
-    return NextResponse.json(
-      {
-        error: 'Erreur lors de la création de l\'installation',
-        details: error instanceof Error ? error.message : 'Erreur inconnue',
-      },
-      { status: 500 }
-    );
+    
+    return NextResponse.json({
+      error: 'Erreur lors de la création de l\'installation',
+      details: (error instanceof Error) ? error.message : 'Erreur inconnue'
+    }, { status: 500 });
   }
 }

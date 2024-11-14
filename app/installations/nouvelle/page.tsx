@@ -1,16 +1,11 @@
 'use client';
-
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from "@/components/ui/skeleton";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface Materiel {
   typeMateriel: string;
@@ -32,7 +27,7 @@ interface FormData {
 
 const getCurrentDate = () => {
   const now = new Date();
-  return now.toISOString().split('T')[0];
+  return now.toLocaleDateString('fr-FR');
 };
 
 const initialMateriel: Materiel = {
@@ -42,27 +37,6 @@ const initialMateriel: Materiel = {
   numeroSerie: '',
   dateInstallation: getCurrentDate()
 };
-
-function useSuggestions(field: string) {
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      try {
-        const response = await fetch(`/api/suggestions?field=${field}`);
-        if (!response.ok) throw new Error('Erreur lors de la récupération des suggestions');
-        const data = await response.json();
-        setSuggestions(data);
-      } catch (error) {
-        console.error('Erreur:', error);
-      }
-    };
-
-    fetchSuggestions();
-  }, [field]);
-
-  return suggestions;
-}
 
 export default function CreateInstallation() {
   const router = useRouter();
@@ -75,17 +49,12 @@ export default function CreateInstallation() {
     dateFacture: '',
     materiels: [{ ...initialMateriel }]
   });
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const nomSuggestions = useSuggestions('nom');
-  const organisationSuggestions = useSuggestions('organisation');
-  const clientSuggestions = useSuggestions('client');
-  const boutiqueSuggestions = useSuggestions('boutique');
-  const typeMaterielSuggestions = useSuggestions('typeMateriel');
-  const marqueSuggestions = useSuggestions('marque');
-
-  const handleChange = useCallback((name: string, value: string, index?: number) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
+    const { name, value } = e.target;
     setFormData(prev => {
       if (name.startsWith('materiel-') && index !== undefined) {
         const field = name.split('-')[1] as keyof Materiel;
@@ -134,49 +103,10 @@ export default function CreateInstallation() {
     }
   };
 
-  const AutocompleteInput = ({ name, value, onChange, suggestions, placeholder }: { name: string, value: string, onChange: (name: string, value: string) => void, suggestions: string[], placeholder: string }) => {
-    const [open, setOpen] = useState(false);
-
-    return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-          >
-            {value || placeholder}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
-          <Command>
-            <CommandInput placeholder={`Rechercher ${placeholder.toLowerCase()}...`} />
-            <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
-            <CommandGroup>
-              {suggestions.map((suggestion) => (
-                <CommandItem
-                  key={suggestion}
-                  onSelect={() => {
-                    onChange(name, suggestion);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === suggestion ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {suggestion}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    );
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -201,65 +131,27 @@ export default function CreateInstallation() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="nom" className="block text-sm font-medium text-gray-700">Nom de l'installation</label>
-              <AutocompleteInput
-                name="nom"
-                value={formData.nom}
-                onChange={handleChange}
-                suggestions={nomSuggestions}
-                placeholder="Nom de l'installation"
-              />
+              <input id="nom" type="text" name="nom" value={formData.nom} onChange={handleChange} onKeyDown={handleKeyDown} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div>
               <label htmlFor="organisation" className="block text-sm font-medium text-gray-700">Organisation</label>
-              <AutocompleteInput
-                name="organisation"
-                value={formData.organisation}
-                onChange={handleChange}
-                suggestions={organisationSuggestions}
-                placeholder="Organisation"
-              />
+              <input id="organisation" type="text" name="organisation" value={formData.organisation} onChange={handleChange} onKeyDown={handleKeyDown} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div>
               <label htmlFor="client" className="block text-sm font-medium text-gray-700">Client</label>
-              <AutocompleteInput
-                name="client"
-                value={formData.client}
-                onChange={handleChange}
-                suggestions={clientSuggestions}
-                placeholder="Client"
-              />
+              <input id="client" type="text" name="client" value={formData.client} onChange={handleChange} onKeyDown={handleKeyDown} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div>
               <label htmlFor="boutique" className="block text-sm font-medium text-gray-700">Boutique</label>
-              <AutocompleteInput
-                name="boutique"
-                value={formData.boutique}
-                onChange={handleChange}
-                suggestions={boutiqueSuggestions}
-                placeholder="Boutique"
-              />
+              <input id="boutique" type="text" name="boutique" value={formData.boutique} onChange={handleChange} onKeyDown={handleKeyDown} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div>
               <label htmlFor="numeroFacture" className="block text-sm font-medium text-gray-700">Numéro de facture</label>
-              <input
-                id="numeroFacture"
-                type="text"
-                name="numeroFacture"
-                value={formData.numeroFacture}
-                onChange={(e) => handleChange(e.target.name, e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-              />
+              <input id="numeroFacture" type="text" name="numeroFacture" value={formData.numeroFacture} onChange={handleChange} onKeyDown={handleKeyDown} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
             <div>
               <label htmlFor="dateFacture" className="block text-sm font-medium text-gray-700">Date de facture</label>
-              <input
-                id="dateFacture"
-                type="date"
-                name="dateFacture"
-                value={formData.dateFacture}
-                onChange={(e) => handleChange(e.target.name, e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-              />
+              <input id="dateFacture" type="date" name="dateFacture" value={formData.dateFacture} onChange={handleChange} onKeyDown={handleKeyDown} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
           </div>
           <div className="mt-8">
@@ -268,48 +160,25 @@ export default function CreateInstallation() {
               <Card key={index} className="p-6 mb-4">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Matériel {index + 1}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor={`materiel-typeMateriel-${index}`} className="block text-sm font-medium text-gray-700">Type de matériel</label>
-                    <AutocompleteInput
-                      name={`materiel-typeMateriel-${index}`}
-                      value={materiel.typeMateriel}
-                      onChange={(name, value) => handleChange(name, value, index)}
-                      suggestions={typeMaterielSuggestions}
-                      placeholder="Type de matériel"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`materiel-marque-${index}`} className="block text-sm font-medium text-gray-700">Marque</label>
-                    <AutocompleteInput
-                      name={`materiel-marque-${index}`}
-                      value={materiel.marque}
-                      onChange={(name, value) => handleChange(name, value, index)}
-                      suggestions={marqueSuggestions}
-                      placeholder="Marque"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`materiel-modele-${index}`} className="block text-sm font-medium text-gray-700">Modèle</label>
-                    <input
-                      id={`materiel-modele-${index}`}
-                      type="text"
-                      name={`materiel-modele-${index}`}
-                      value={materiel.modele}
-                      onChange={(e) => handleChange(e.target.name, e.target.value, index)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`materiel-numeroSerie-${index}`} className="block text-sm font-medium text-gray-700">Numéro de série</label>
-                    <input
-                      id={`materiel-numeroSerie-${index}`}
-                      type="text"
-                      name={`materiel-numeroSerie-${index}`}
-                      value={materiel.numeroSerie}
-                      onChange={(e) => handleChange(e.target.name, e.target.value, index)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                  </div>
+                  {Object.entries(materiel).map(([key, value]) => (
+                    key !== 'dateInstallation' && (
+                      <div key={key}>
+                        <label htmlFor={`materiel-${key}-${index}`} className="block text-sm font-medium text-gray-700">
+                          {key === 'typeMateriel' ? 'Type de matériel' : key.charAt(0).toUpperCase() + key.slice(1)}
+                        </label>
+                        <input
+                          id={`materiel-${key}-${index}`}
+                          type="text"
+                          name={`materiel-${key}`}
+                          value={value}
+                          onChange={(e) => handleChange(e, index)}
+                          onKeyDown={handleKeyDown}
+                          required
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                    )
+                  ))}
                 </div>
                 {formData.materiels.length > 1 && (
                   <Button variant="destructive" onClick={() => removeMateriel(index)} className="mt-4">

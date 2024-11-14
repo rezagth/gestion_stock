@@ -108,10 +108,7 @@ export default function InstallationsPage() {
       ) : (
         Object.entries(groupedInstallations).map(([org, orgInstallations]) => (
           <Card key={org} className="mb-6 bg-white border rounded-lg shadow-lg overflow-hidden">
-            <div
-              className="p-4 bg-gray-100 flex justify-between items-center cursor-pointer"
-              onClick={() => toggleOrg(org)}
-            >
+            <div className="p-4 bg-gray-100 flex justify-between items-center cursor-pointer" onClick={() => toggleOrg(org)}>
               <h2 className="text-xl font-semibold text-gray-800">{org}</h2>
               {expandedOrgs[org] ? <FaChevronUp /> : <FaChevronDown />}
             </div>
@@ -119,34 +116,38 @@ export default function InstallationsPage() {
               <div className="p-4">
                 {orgInstallations.map((installation) => (
                   <div key={installation.id} className="mb-4 last:mb-0 p-4 bg-white rounded-lg shadow">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{installation.nom}</h3>
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-lg font-semibold text-gray-800">{installation.nom}</h3>
+                      <Link 
+                        href={`/installations/${installation.id}/edit`}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                      >
+                        Modifier
+                      </Link>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-4">
                       <div>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Organisation:</span> {installation.organisation || 'Non spécifiée'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Client:</span> {installation.client}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Boutique:</span> {installation.boutique}</p>
+                        <p className="text-gray-600"><span className="font-medium text-gray-700">Organisation:</span> {installation.organisation || 'Non spécifiée'}</p>
+                        <p className="text-gray-600"><span className="font-medium text-gray-700">Client:</span> {installation.client}</p>
+                        <p className="text-gray-600"><span className="font-medium text-gray-700">Boutique:</span> {installation.boutique}</p>
                       </div>
                       <div>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Numéro de Facture:</span> {installation.numeroFacture || 'Non spécifié'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Date de Facture:</span> {installation.dateFacture ? new Date(installation.dateFacture).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Date de création:</span> {new Date(installation.dateCreation).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        <p className="text-gray-600"><span className="font-medium text-gray-700">Numéro de Facture:</span> {installation.numeroFacture || 'Non spécifié'}</p>
+                        <p className="text-gray-600"><span className="font-medium text-gray-700">Date de Facture:</span> {installation.dateFacture ? new Date(installation.dateFacture).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
+                        <p className="text-gray-600"><span className="font-medium text-gray-700">Date de création:</span> {new Date(installation.dateCreation).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                       </div>
                     </div>
                     {installation.materiels && installation.materiels.length > 0 && (
                       <div>
-                        <h4 className="font-semibold text-gray=700 mb=2">Matériels:</h4>
-                        {/* Grille pour les matériels */}
+                        <h4 className="font-semibold text-gray-700 mb-2">Matériels:</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
                           {installation.materiels.map((materiel) => (
                             <Link key={materiel.id} href={`/materiels/${materiel.id}`}>
-                              {/* Rectangle pour le matériel */}
-                              <div className={`bg-blue-50 p-4 rounded-md shadow-md hover:shadow-lg transition duration=300 cursor-pointer`}>
-                                {/* Contenu du matériel */}
-                                <p className={`font-bold text-lg text-blue=600`}>{materiel.marque} {materiel.modele}</p>
-                                <p className={`text-sm text-gray=600`}><span className={`font-medium`}>Type:</span> {materiel.typeMateriel}</p>
-                                <p className={`text-sm text-gray=600`}><span className={`font-medium`}>S/N:</span> {materiel.numeroSerie}</p>
-                                {/* Formatage de la date en français */}
-                                <p className={`text-sm text-gray=600`}><span className={`font-medium`}>Installé le:</span> {new Date(materiel.dateInstallation).toLocaleDateString('fr-FR')}</p>
+                              <div className="bg-blue-50 p-4 rounded-md shadow-md hover:shadow-lg transition duration-300 cursor-pointer">
+                                <p className="font-bold text-lg text-blue-600">{materiel.marque} {materiel.modele}</p>
+                                <p className="text-sm text-gray-600"><span className="font-medium">Type:</span> {materiel.typeMateriel}</p>
+                                <p className="text-sm text-gray-600"><span className="font-medium">S/N:</span> {materiel.numeroSerie}</p>
+                                <p className="text-sm text-gray-600"><span className="font-medium">Installé le:</span> {new Date(materiel.dateInstallation).toLocaleDateString('fr-FR')}</p>
                               </div>
                             </Link>
                           ))}

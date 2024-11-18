@@ -40,7 +40,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const data = await request.json();
 
-    // Mise à jour de l'installation
     const updatedInstallation = await prisma.installation.update({
       where: { id },
       data: {
@@ -52,27 +51,22 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         dateFacture: data.dateFacture ? new Date(data.dateFacture) : null,
         status: data.status,
         materiels: {
-          updateMany: data.materiels.map((materiel: any) => ({
-            where: { id: materiel.id },
-            data: {
-              marque: materiel.marque,
-              modele: materiel.modele,
-              numeroSerie: materiel.numeroSerie,
-              typeMateriel: materiel.typeMateriel,
-              dateInstallation: new Date(materiel.dateInstallation),
-            },
+          deleteMany: {}, // Supprime tous les matériels existants
+          create: data.materiels.map((materiel: any) => ({
+            marque: materiel.marque,
+            modele: materiel.modele,
+            numeroSerie: materiel.numeroSerie,
+            typeMateriel: materiel.typeMateriel,
+            dateInstallation: new Date(materiel.dateInstallation),
           })),
         },
       },
       include: { materiels: true },
     });
 
-    // Retourne la réponse JSON avec les données de l'installation mise à jour
     return NextResponse.json(updatedInstallation);
   } catch (error) {
     console.error('Erreur lors de la mise à jour de l\'installation:', error);
-
-    // Assurez-vous de retourner un objet JSON valide même en cas d'erreur
     return NextResponse.json(
       { error: 'Erreur lors de la mise à jour de l\'installation' },
       { status: 500 }

@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button"; // Importation du composant Button de Shadcn
-import { Skeleton } from "@/components/ui/skeleton"; // Importation du composant Skeleton de Shadcn
-import { Card } from "@/components/ui/card"; // Importation du composant Card de Shadcn
+import { Button } from "@/components/ui/button"; // Importation du composant Button
 import { ToastContainer, toast } from 'react-toastify'; // Importation de Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Styles de Toastify
 
@@ -35,7 +33,6 @@ export default function RemplacementPage() {
   const [installations, setInstallations] = useState<Installation[]>([]);
   const [selectedInstallation, setSelectedInstallation] = useState<string | null>(null);
   const [materiels, setMateriels] = useState<Materiel[]>([]);
-  
   const [nouveauMateriel, setNouveauMateriel] = useState<Materiel>({
     id: '',
     nom: '',
@@ -46,6 +43,7 @@ export default function RemplacementPage() {
     dateInstallation: getCurrentDateFR()
   });
 
+  // Récupération des installations lors du chargement du composant
   useEffect(() => {
     const fetchInstallations = async () => {
       try {
@@ -56,48 +54,45 @@ export default function RemplacementPage() {
       } catch (err) {
         console.error('Erreur lors du chargement des installations:', err);
         setError('Impossible de charger les installations');
-        setInstallations([]);
         toast.error('Impossible de charger les installations');
       }
     };
-
     fetchInstallations();
   }, []);
 
+  // Récupération des matériels lorsque l'installation sélectionnée change
   useEffect(() => {
     const fetchMateriels = async () => {
       if (selectedInstallation) {
         try {
-          const res = await fetch(`/api/materiels?installationId=${selectedInstallation}`);
+          const res = await fetch(`/api/materiels?installationId=${selectedInstallation}`); // Requête pour récupérer les matériels de l'installation sélectionnée
           if (!res.ok) throw new Error('Erreur lors de la récupération des matériels');
           const data = await res.json();
           setMateriels(Array.isArray(data) ? data : []);
         } catch (err) {
           console.error('Erreur lors du chargement des matériels:', err);
           setError('Impossible de charger les matériels');
-          setMateriels([]);
           toast.error('Impossible de charger les matériels');
         }
+      } else {
+        setMateriels([]); // Réinitialiser la liste si aucune installation n'est sélectionnée
       }
     };
-
     fetchMateriels();
   }, [selectedInstallation]);
 
+  // Gestion de la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
     if (!selectedInstallation) {
       setError('Veuillez sélectionner une installation');
       toast.error('Veuillez sélectionner une installation');
       return;
     }
-
     setIsLoading(true);
     setError(null);
-    
+
     const formData = new FormData(event.currentTarget);
-    
     const replacementData = {
       installationId: selectedInstallation,
       ancienMaterielId: formData.get('ancienMateriel') as string,
@@ -130,6 +125,7 @@ export default function RemplacementPage() {
     }
   };
 
+  // Gestion des changements dans le nouveau matériel
   const handleNouveauMaterielChange = (field: keyof Materiel, value: string) => {
     setNouveauMateriel(prev => ({ ...prev, [field]: value }));
   };

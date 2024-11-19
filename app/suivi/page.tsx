@@ -1,5 +1,4 @@
-'use client';
-
+"use client"
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Materiel } from '@prisma/client';
@@ -13,12 +12,14 @@ export default function SuiviMaterielPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [installationId, setInstallationId] = useState<number | null>(null);  // Installation ID state
 
   // Fonction pour récupérer les matériels depuis l'API
   useEffect(() => {
     const fetchMateriels = async () => {
+      const queryParams = installationId ? `?installationId=${installationId}` : '';  // Ajout de l'ID si disponible
       try {
-        const response = await fetch('/api/materiels');
+        const response = await fetch(`/api/materiels${queryParams}`);
         if (!response.ok) {
           throw new Error('Échec de la récupération des matériels');
         }
@@ -32,7 +33,7 @@ export default function SuiviMaterielPage() {
     };
 
     fetchMateriels();
-  }, []);
+  }, [installationId]);  // Dépend de installationId
 
   // Filtrer les matériels en fonction du terme de recherche
   const filteredMateriels = useMemo(() => {

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Materiel, Installation } from '@prisma/client';
-import { FaTools, FaBuilding, FaFileInvoice, FaArrowLeft } from 'react-icons/fa';
+import { FaTools, FaBuilding, FaFileInvoice, FaArrowLeft, FaExclamationTriangle } from 'react-icons/fa';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type MaterielWithDetails = Materiel & {
     installation: Installation;
+    materielRemplace?: Materiel;  // Ajout de la relation pour le matériel remplacé
 };
 
 const MaterielDetail: React.FC = () => {
@@ -53,13 +54,13 @@ const MaterielDetail: React.FC = () => {
                     <FaArrowLeft className="mr-2" /> Retour à la liste
                 </Button>
             </Link>
-            
+
             <Card className="shadow-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white">
                 <div className="px-6 py-8 bg-blue-600 text-white">
                     <h1 className="text-4xl font-bold">{materiel.typeMateriel}</h1>
                     <p className="mt-2 text-blue-200">Détails du matériel</p>
                 </div>
-                
+
                 <div className="p-8 space-y-10">
                     {/* Informations du Matériel */}
                     <Section title="Détails du Matériel" icon={<FaTools />}>
@@ -88,6 +89,27 @@ const MaterielDetail: React.FC = () => {
                             <InfoItem label="Date Facture" value={materiel.installation.dateFacture ? new Date(materiel.installation.dateFacture).toLocaleDateString() : 'Non spécifiée'} />
                         </InfoGrid>
                     </Section>
+
+                    {/* Section Matériel Remplacé */}
+                    {materiel.materielRemplace && (
+                        <Section title="Matériel Remplacé" icon={<FaExclamationTriangle className="text-yellow-500" />}>
+                            <InfoGrid>
+                                {/* Type de matériel remplacé */}
+                                <InfoItem label="Type de matériel remplacé" value={materiel.materielRemplace.typeMateriel} />
+                                <InfoItem label="Marque" value={materiel.materielRemplace.marque} />
+                                <InfoItem label="Modèle" value={materiel.materielRemplace.modele} />
+                                <InfoItem label="N° série" value={materiel.materielRemplace.numeroSerie} />
+
+                                {/* Date du remplacement */}
+                                <InfoItem
+                                    label="Date du remplacement"
+                                    value={materiel.materielRemplace.dateRemplacement ?
+                                        new Date(materiel.materielRemplace.dateRemplacement).toLocaleDateString() :
+                                        'Non spécifiée'}
+                                />
+                            </InfoGrid>
+                        </Section>
+                    )}
                 </div>
             </Card>
 
@@ -121,13 +143,13 @@ const InfoItem: React.FC<{ label: string; value: string }> = ({ label, value }) 
 const LoadingSkeleton: React.FC = () => (
     <div className="max-w-4xl mx-auto my-12 px-4">
         <Skeleton className="w-32 h-10 mb-6" /> {/* Bouton de retour */}
-        
+
         <Card className="shadow-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white">
             <div className="px-6 py-8 bg-blue-600">
                 <Skeleton className="w-3/4 h-10 mb-2" /> {/* Titre */}
                 <Skeleton className="w-1/2 h-6" /> {/* Sous-titre */}
             </div>
-            
+
             <div className="p-8 space-y-10">
                 {[...Array(3)].map((_, index) => (
                     <div key={index} className="bg-white p-6 rounded-lg shadow-md">

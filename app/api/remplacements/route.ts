@@ -59,10 +59,20 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { installationId, ancienMaterielId, nouveauMateriel } = body;
     
+    // Vérification des données d'entrée
     if (!installationId || !ancienMaterielId || !nouveauMateriel) {
       return NextResponse.json({ error: 'Données manquantes pour le remplacement' }, { status: 400 });
     }
 
+    // Vérification de l'existence de l'ancien matériel
+    const ancienMateriel = await prisma.materiel.findUnique({
+      where: { id: ancienMaterielId },
+    });
+    if (!ancienMateriel) {
+      return NextResponse.json({ error: 'Ancien matériel non trouvé' }, { status: 404 });
+    }
+
+    // Création du nouveau matériel
     const newMateriel = await prisma.materiel.create({
       data: {
         marque: nouveauMateriel.marque,
@@ -74,6 +84,16 @@ export async function POST(request: Request) {
       },
     });
 
+    // Mise à jour du matériel remplacé pour indiquer qu'il a été remplacé par le nouveau matériel
+    await prisma.materiel.update({
+      where: { id: ancienMaterielId },
+      data: {
+        materielRemplaceId: newMateriel.id, // Référence au nouveau matériel qui remplace l'ancien
+        status: 'REMPLACE', // Mettre à jour le statut du matériel remplacé
+      },
+    });
+
+    // Création du remplacement pour l'historique
     const replacement = await prisma.remplacement.create({
       data: {
         dateRemplacement: new Date(),
@@ -93,7 +113,6 @@ export async function POST(request: Request) {
     return NextResponse.json(formattedReplacement);
   } catch (error) {
     console.error('Erreur lors du remplacement:', error);
-    
     return NextResponse.json(
       { error: 'Erreur lors du remplacement', details: error instanceof Error ? error.message : 'Erreur inconnue' },
       { status: 500 }

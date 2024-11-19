@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css'; // Styles de Toastify
 
 type Materiel = {
   id: string;
-  nom: string;
   marque: string;
   modele: string;
   numeroSerie: string;
@@ -32,10 +31,9 @@ export default function RemplacementPage() {
   const [error, setError] = useState<string | null>(null);
   const [installations, setInstallations] = useState<Installation[]>([]);
   const [selectedInstallation, setSelectedInstallation] = useState<string | null>(null);
-  const [materiels, setMateriels] = useState<Materiel[]>([]);
+  const [materiels, setMateriels] = useState<Materiel[]>([]); // Liste des matériels associés à l'installation
   const [nouveauMateriel, setNouveauMateriel] = useState<Materiel>({
     id: '',
-    nom: '',
     marque: '',
     modele: '',
     numeroSerie: '',
@@ -65,7 +63,8 @@ export default function RemplacementPage() {
     const fetchMateriels = async () => {
       if (selectedInstallation) {
         try {
-          const res = await fetch(`/api/materiels?installationId=${selectedInstallation}`); // Requête pour récupérer les matériels de l'installation sélectionnée
+          // Fetch les matériels de l'installation sélectionnée
+          const res = await fetch(`/api/materiels?installationId=${selectedInstallation}`);
           if (!res.ok) throw new Error('Erreur lors de la récupération des matériels');
           const data = await res.json();
           setMateriels(Array.isArray(data) ? data : []);
@@ -75,7 +74,7 @@ export default function RemplacementPage() {
           toast.error('Impossible de charger les matériels');
         }
       } else {
-        setMateriels([]); // Réinitialiser la liste si aucune installation n'est sélectionnée
+        setMateriels([]); // Si aucune installation n'est sélectionnée, réinitialiser la liste des matériels
       }
     };
     fetchMateriels();
@@ -139,11 +138,11 @@ export default function RemplacementPage() {
           <label htmlFor="installation" className="block text-sm font-medium text-gray-700">Installation</label>
           <select
             id="installation"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
             value={selectedInstallation || ''}
             onChange={(e) => setSelectedInstallation(e.target.value)}
           >
-            <option value="">Sélectionnez une installation</option>
+            <option value="">Sélectionner une installation</option>
             {installations.map((installation) => (
               <option key={installation.id} value={installation.id}>
                 {installation.nom}
@@ -153,82 +152,96 @@ export default function RemplacementPage() {
         </div>
 
         {selectedInstallation && (
-          <>
-            <div>
-              <label htmlFor="ancienMateriel" className="block text-sm font-medium text-gray-700">Matériel à remplacer</label>
-              <select
-                id="ancienMateriel"
-                name="ancienMateriel"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="">Sélectionnez le matériel à remplacer</option>
-                {materiels.map((materiel) => (
+          <div>
+            <label htmlFor="ancienMateriel" className="block text-sm font-medium text-gray-700">Matériel à remplacer</label>
+            <select
+              id="ancienMateriel"
+              name="ancienMateriel"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              required
+            >
+              <option value="">Sélectionner un matériel</option>
+              {materiels.length > 0 ? (
+                materiels.map((materiel) => (
                   <option key={materiel.id} value={materiel.id}>
-                    {materiel.marque} {materiel.modele} - {materiel.numeroSerie}
+                    {materiel.marque} {materiel.modele} ({materiel.numeroSerie})
                   </option>
-                ))}
-              </select>
-            </div>
-
-            <h2 className="text-2xl font-semibold mt-6 mb-4 text-blue-600">Nouveau Matériel</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Nom"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={nouveauMateriel.nom}
-                onChange={(e) => handleNouveauMaterielChange('nom', e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Marque"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={nouveauMateriel.marque}
-                onChange={(e) => handleNouveauMaterielChange('marque', e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Modèle"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={nouveauMateriel.modele}
-                onChange={(e) => handleNouveauMaterielChange('modele', e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Numéro de série"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={nouveauMateriel.numeroSerie}
-                onChange={(e) => handleNouveauMaterielChange('numeroSerie', e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Type de matériel"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={nouveauMateriel.typeMateriel}
-                onChange={(e) => handleNouveauMaterielChange('typeMateriel', e.target.value)}
-              />
-              <input
-                type="date"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={nouveauMateriel.dateInstallation}
-                onChange={(e) => handleNouveauMaterielChange('dateInstallation', e.target.value)}
-              />
-            </div>
-          </>
+                ))
+              ) : (
+                <option value="">Aucun matériel disponible pour cette installation</option>
+              )}
+            </select>
+          </div>
         )}
 
-        <Button
-          type="submit"
-          disabled={isLoading}
-          className={`w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
-          {isLoading ? 'Chargement...' : 'Effectuer le Remplacement'}
-        </Button>
+        {/* Nouveau matériel */}
+        <div className="mt-4">
+          <label htmlFor="marque" className="block text-sm font-medium text-gray-700">Marque du matériel</label>
+          <input
+            id="marque"
+            type="text"
+            value={nouveauMateriel.marque}
+            onChange={(e) => handleNouveauMaterielChange('marque', e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label htmlFor="modele" className="block text-sm font-medium text-gray-700">Modèle du matériel</label>
+          <input
+            id="modele"
+            type="text"
+            value={nouveauMateriel.modele}
+            onChange={(e) => handleNouveauMaterielChange('modele', e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label htmlFor="numeroSerie" className="block text-sm font-medium text-gray-700">Numéro de série</label>
+          <input
+            id="numeroSerie"
+            type="text"
+            value={nouveauMateriel.numeroSerie}
+            onChange={(e) => handleNouveauMaterielChange('numeroSerie', e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label htmlFor="typeMateriel" className="block text-sm font-medium text-gray-700">Type de matériel</label>
+          <input
+            id="typeMateriel"
+            type="text"
+            value={nouveauMateriel.typeMateriel}
+            onChange={(e) => handleNouveauMaterielChange('typeMateriel', e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label htmlFor="dateInstallation" className="block text-sm font-medium text-gray-700">Date d'installation</label>
+          <input
+            id="dateInstallation"
+            type="date"
+            value={nouveauMateriel.dateInstallation}
+            onChange={(e) => handleNouveauMaterielChange('dateInstallation', e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+
+        <div className="mt-6 flex justify-between items-center">
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Chargement...' : 'Effectuer le Remplacement'}
+          </Button>
+        </div>
       </form>
 
-      {error && <p className="text-red-500 text-xs italic mt-4">{error}</p>}
-
-      {/* Container for Toast notifications */}
+      {error && <div className="mt-4 text-red-600">{error}</div>}
       <ToastContainer />
     </div>
   );

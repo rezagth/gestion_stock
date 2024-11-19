@@ -10,26 +10,31 @@ const formatDateToFrench = (date) => {
   return format(new Date(date), 'dd/MM/yyyy', { locale: fr });
 };
 
-// GET : Récupérer tous les matériels
+// GET : Récupérer tous les matériels d'une installation
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search') || '';
+    const installationId = searchParams.get('installationId'); // Récupérer l'ID de l'installation
 
+    // Filtrage par installationId
     const materiels = await prisma.materiel.findMany({
-      where: search ? {
-        OR: [
-          { marque: { contains: search, mode: 'insensitive' } },
-          { modele: { contains: search, mode: 'insensitive' } },
-          { numeroSerie: { contains: search, mode: 'insensitive' } },
-          { typeMateriel: { contains: search, mode: 'insensitive' } },
-        ]
-      } : undefined,
+      where: {
+        installationId: installationId ? parseInt(installationId) : undefined, // Filtrer par installationId
+        OR: search
+          ? [
+              { marque: { contains: search, mode: 'insensitive' } },
+              { modele: { contains: search, mode: 'insensitive' } },
+              { numeroSerie: { contains: search, mode: 'insensitive' } },
+              { typeMateriel: { contains: search, mode: 'insensitive' } },
+            ]
+          : undefined,
+      },
       include: { installation: true },
     });
 
     return NextResponse.json(materiels.length ? materiels : [], {
-      status: materiels.length ? 200 : 404
+      status: materiels.length ? 200 : 404,
     });
   } catch (error) {
     console.error('Erreur lors de la récupération des matériels:', error);

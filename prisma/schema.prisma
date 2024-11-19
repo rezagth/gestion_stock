@@ -19,7 +19,7 @@ model Installation {
   organisation   String
   status         InstallationStatus @default(ACTIVE) // Statut de l'installation
   materiels      Materiel[]   @relation("InstallationMateriels")
-  remplacements  Remplacement[]
+  remplacements  Remplacement[] // Liste des remplacements liés à cette installation
 
   createdAt      DateTime     @default(now()) // Date de création
   updatedAt      DateTime     @updatedAt      // Date de mise à jour automatique
@@ -34,11 +34,20 @@ model Materiel {
   dateInstallation        DateTime
   installationId          Int
   installation            Installation  @relation("InstallationMateriels", fields: [installationId], references: [id])
-  remplacementsPrecedents Remplacement[] @relation("AncienMateriel")
-  remplacementsSuivants   Remplacement[] @relation("NouveauMateriel")
+  remplacementsPrecedents Remplacement[] @relation("AncienMateriel") // Remplacements où ce matériel a été remplacé
+  remplacementsSuivants   Remplacement[] @relation("NouveauMateriel") // Remplacements où ce matériel a été installé
+  
+  // Référence au matériel qui a remplacé ce matériel, s'il existe
+  materielRemplaceId      String?       @unique 
+  materielRemplace        Materiel?     @relation("MaterielRemplace", fields: [materielRemplaceId], references: [id])
+
+  // Ajout de la relation inverse : matériel qui a été remplacé par ce matériel
+  materielsRemplacants    Materiel[]    @relation("MaterielRemplace") // Matériels qui ont remplacé ce matériel
 
   createdAt               DateTime     @default(now()) // Date de création
   updatedAt               DateTime     @updatedAt       // Date de mise à jour automatique
+
+  status                  MaterielStatus @default(INSTALLE)
 }
 
 model Remplacement {
@@ -60,4 +69,10 @@ enum InstallationStatus {
   INACTIVE
   PENDING
   COMPLETED
+}
+
+enum MaterielStatus {
+  INSTALLE   // Matériel installé
+  REMPLACE   // Matériel remplacé
+  EN_REPARATION // Matériel en réparation
 }

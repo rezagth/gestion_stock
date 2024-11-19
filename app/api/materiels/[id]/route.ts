@@ -3,29 +3,24 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id?: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID du matériel manquant' }, { status: 400 });
+  }
+
   try {
-    const id = params?.id;
-
-    if (!id) {
-      return NextResponse.json({ error: 'ID du matériel manquant' }, { status: 400 });
-    }
-
-    console.log('Récupération du matériel avec ID:', id); // Log pour débogage
-
     const materiel = await prisma.materiel.findUnique({
       where: { id },
       include: {
-          installation: true,
-          remplacementsPrecedents: {
-              include: { ancienMateriel: true }
-          },
-          remplacementsSuivants: {
-              include: { nouveauMateriel: true }
-          },
+        installation: true, // Inclure les informations d'installation liées
+        remplacementsPrecedents: {
+          include: { ancienMateriel: true }
+        },
+        remplacementsSuivants: {
+          include: { nouveauMateriel: true }
+        },
       },
     });
 

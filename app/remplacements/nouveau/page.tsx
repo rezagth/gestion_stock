@@ -58,9 +58,7 @@ export default function RemplacementPage() {
     fetchInstallations();
   }, []);
 
-  
   // Récupération des matériels lorsque l'installation sélectionnée change
-<<<<<<< HEAD
   useEffect(() => {
     const fetchMateriels = async () => {
       if (selectedInstallation) {
@@ -77,28 +75,10 @@ export default function RemplacementPage() {
         }
       } else {
         setMateriels([]); // Si aucune installation n'est sélectionnée, réinitialiser la liste des matériels
-=======
-useEffect(() => {
-  const fetchMateriels = async () => {
-    if (selectedInstallation) {
-      try {
-        const res = await fetch(`/api/materiels?installationId=${selectedInstallation}`);
-        if (!res.ok) throw new Error('Erreur lors de la récupération des matériels');
-        const data = await res.json();
-        setMateriels(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Erreur lors du chargement des matériels:', err);
-        setError('Impossible de charger les matériels');
-        toast.error('Impossible de charger les matériels');
->>>>>>> 9c559a27ff63d3eab8b3c852a988c68cd2cc2578
       }
-    } else {
-      setMateriels([]); // Réinitialiser la liste si aucune installation n'est sélectionnée
-    }
-  };
-  fetchMateriels();
-}, [selectedInstallation]);
-
+    };
+    fetchMateriels();
+  }, [selectedInstallation]);
 
   // Gestion de la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -181,7 +161,6 @@ useEffect(() => {
               required
             >
               <option value="">Sélectionner un matériel</option>
-<<<<<<< HEAD
               {materiels.length > 0 ? (
                 materiels.map((materiel) => (
                   <option key={materiel.id} value={materiel.id}>
@@ -191,13 +170,6 @@ useEffect(() => {
               ) : (
                 <option value="">Aucun matériel disponible pour cette installation</option>
               )}
-=======
-              {materiels.map((materiel) => (
-                <option key={materiel.id} value={materiel.id}>
-                  {materiel.marque} {materiel.modele} ({materiel.numeroSerie})
-                </option>
-              ))}
->>>>>>> 9c559a27ff63d3eab8b3c852a988c68cd2cc2578
             </select>
           </div>
         )}

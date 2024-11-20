@@ -1,12 +1,9 @@
-'use client';
-
+"use client"
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { FaSpinner, FaExclamationTriangle, FaPlus, FaSearch, FaTools, FaBoxOpen } from 'react-icons/fa';
+import { FaPlus, FaTools, FaBoxOpen, FaCalendarAlt, FaBarcode } from 'react-icons/fa';
 import { Card } from "@/components/ui/card"; // Importation du composant Card de Shadcn
-import { Button } from "@/components/ui/button"; // Importation du composant Button de Shadcn
 import { Input } from "@/components/ui/input"; // Importation du composant Input de Shadcn
-import { Skeleton } from "@/components/ui/skeleton"; // Importation du composant Skeleton de Shadcn
 import { ToastContainer, toast } from 'react-toastify'; // Importation de Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Styles de Toastify
 
@@ -42,8 +39,7 @@ const Remplacements = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Remplacement | 'installation.nom', direction: 'asc' | 'desc' }>({ key: 'dateRemplacement', direction: 'desc' });
-
+  
   useEffect(() => {
     fetchRemplacements();
   }, []);
@@ -56,41 +52,22 @@ const Remplacements = () => {
       }
       const data = await response.json();
       setRemplacements(data.remplacements);
-      toast.success('Remplacements chargés avec succès !'); // Notification de succès
+      toast.success('Remplacements chargés avec succès !');
       setIsLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
-      toast.error("Erreur lors du chargement des remplacements"); // Notification d'erreur
+      toast.error("Erreur lors du chargement des remplacements");
       setIsLoading(false);
     }
   };
 
   const filteredAndSortedRemplacements = useMemo(() => {
-    let result = remplacements.filter(remplacement =>
+    return remplacements.filter(remplacement =>
       remplacement.installation?.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       remplacement.ancienMateriel?.marque.toLowerCase().includes(searchTerm.toLowerCase()) ||
       remplacement.nouveauMateriel?.marque.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    result.sort((a, b) => {
-      if (sortConfig.key === 'installation.nom') {
-        return (a.installation?.nom || '').localeCompare(b.installation?.nom || '') * (sortConfig.direction === 'asc' ? 1 : -1);
-      }
-      if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-    return result;
-  }, [remplacements, searchTerm, sortConfig]);
-
-  const requestSort = (key: keyof Remplacement | 'installation.nom') => {
-    let direction: 'asc' | 'desc' = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key, direction });
-  };
+  }, [remplacements, searchTerm]);
 
   const formatDateFR = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -101,10 +78,10 @@ const Remplacements = () => {
       <div className="grid grid-cols-1 gap-8">
         {[...Array(3)].map((_, index) => (
           <Card key={index} className="p-6 bg-white border rounded-lg shadow-lg">
-            <Skeleton className="h-6 mb-4" />
-            <Skeleton className="h-4 mb-2" />
-            <Skeleton className="h-4 mb-2" />
-            <Skeleton className="h-4 mb-2" />
+            <div className="h-6 mb-4 bg-gray-200 animate-pulse" />
+            <div className="h-4 mb-2 bg-gray-200 animate-pulse" />
+            <div className="h-4 mb-2 bg-gray-200 animate-pulse" />
+            <div className="h-4 mb-2 bg-gray-200 animate-pulse" />
           </Card>
         ))}
       </div>
@@ -117,7 +94,7 @@ const Remplacements = () => {
 
   return (
     <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
-      <ToastContainer /> {/* Conteneur pour les notifications */}
+      <ToastContainer />
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Liste des Remplacements</h1>
         <Link 
@@ -143,25 +120,53 @@ const Remplacements = () => {
       ) : (
         <div className="grid grid-cols-1 gap-y-8">
           {filteredAndSortedRemplacements.map((remplacement) => (
-            <Card key={remplacement.id} className={`border-l-4 p-6 rounded-lg shadow-lg transition duration-300 hover:bg-gray-100 hover:border-blue-600`}>
-              <div className="flex items-center mb-4">
-                {remplacement.ancienMateriel ? (
-                  <FaTools className="text-xl mr-2 text-blue-600" />
-                ) : (
-                  <FaBoxOpen className="text-xl mr-2 text-green600" />
-                )}
-                <h2 className="text-xl font-semibold text-gray-800">{formatDateFR(remplacement.dateRemplacement)}</h2>
+            <Card key={remplacement.id} className={`p-6 border-l-4 rounded-lg shadow-lg transition duration-300 hover:bg-gray-100 hover:border-blue-600`}>
+              {/* Affichage des informations de l'installation */}
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-blue-600">Installation</h3>
+                <p><strong>Nom:</strong> {remplacement.installation?.nom || 'N/A'}</p>
+                <p><strong>Organisation:</strong> {remplacement.installation?.organisation || 'N/A'}</p>
+                <p><strong>Date de création:</strong> {formatDateFR(remplacement.installation?.dateCreation || '')}</p>
               </div>
-              <p className="font-medium"><strong>Installation:</strong> {remplacement.installation?.nom || 'N/A'}</p>
-              <p className="font-medium"><strong>Ancien Matériel:</strong> {remplacement.ancienMateriel ? `${remplacement.ancienMateriel.marque} ${remplacement.ancienMateriel.modele}` : 'N/A'}</p>
-              <p className="font-medium"><strong>Nouveau Matériel:</strong> {remplacement.nouveauMateriel ? `${remplacement.nouveauMateriel.marque} ${remplacement.nouveauMateriel.modele}` : 'N/A'}</p>
+
+              {/* Affichage des informations sur les matériels */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
+                {/* Ancien Matériel */}
+                <div className="bg-red-50 p-4 rounded-lg shadow-md">
+                  <h3 className="font-semibold text-red-600 flex items-center">
+                    <FaTools className="mr-2" /> Ancien Matériel
+                  </h3>
+                  {remplacement.ancienMateriel ? (
+                    <>
+                      <p><strong>Marque/Modèle:</strong> {remplacement.ancienMateriel.marque} {remplacement.ancienMateriel.modele}</p>
+                      <p className="flex items-center"><FaBarcode className="mr-1" /><strong>N° Série:</strong> {remplacement.ancienMateriel.numeroSerie}</p>
+                      <p className="flex items-center"><FaCalendarAlt className="mr-1" /><strong>Installé le:</strong> {formatDateFR(remplacement.ancienMateriel.dateInstallation)}</p>
+                    </>
+                  ) : (
+                    <p>N/A</p>
+                  )}
+                </div>
+
+                {/* Nouveau Matériel */}
+                <div className="bg-green-50 p-4 rounded-lg shadow-md">
+                  <h3 className="font-semibold text-green-600 flex items-center">
+                    <FaBoxOpen className="mr-2" /> Nouveau Matériel
+                  </h3>
+                  {remplacement.nouveauMateriel ? (
+                    <>
+                      <p><strong>Marque/Modèle:</strong> {remplacement.nouveauMateriel.marque} {remplacement.nouveauMateriel.modele}</p>
+                      <p className="flex items-center"><FaBarcode className="mr-1" /><strong>N° Série: </strong> {remplacement.nouveauMateriel.numeroSerie}</p>
+                      <p className="flex items-center"><FaCalendarAlt className="mr-1" /><strong>Installé le: </strong> {formatDateFR(remplacement.nouveauMateriel.dateInstallation)}</p>
+                    </>
+                  ) : (
+                    <p>N/A</p>
+                  )}
+                </div>
+              </div>
             </Card>
           ))}
         </div>
       )}
-      
-      {/* Suppression du footer pour un rendu plus épuré */}
-      
     </div>
   );
 };

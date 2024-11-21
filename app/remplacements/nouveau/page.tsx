@@ -129,6 +129,13 @@ export default function RemplacementPage() {
     setNouveauMateriel(prev => ({ ...prev, [field]: value }));
   };
 
+  // Gestion de la touche Entrée
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Empêche la soumission du formulaire avec "Entrée"
+    }
+  };
+
   return (
     <div className="container mx-auto p-4 max-w-2xl">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Nouveau Remplacement</h1>
@@ -141,6 +148,7 @@ export default function RemplacementPage() {
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
             value={selectedInstallation || ''}
             onChange={(e) => setSelectedInstallation(e.target.value)}
+            onKeyDown={handleKeyDown} // Empêche "Entrée"
           >
             <option value="">Sélectionner une installation</option>
             {installations.map((installation) => (
@@ -159,6 +167,7 @@ export default function RemplacementPage() {
               name="ancienMateriel"
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               required
+              onKeyDown={handleKeyDown} // Empêche "Entrée"
             >
               <option value="">Sélectionner un matériel</option>
               {materiels.length > 0 ? (
@@ -184,6 +193,7 @@ export default function RemplacementPage() {
             onChange={(e) => handleNouveauMaterielChange('marque', e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
             required
+            onKeyDown={handleKeyDown} // Empêche "Entrée"
           />
         </div>
 
@@ -196,6 +206,7 @@ export default function RemplacementPage() {
             onChange={(e) => handleNouveauMaterielChange('modele', e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
             required
+            onKeyDown={handleKeyDown} // Empêche "Entrée"
           />
         </div>
 
@@ -208,6 +219,7 @@ export default function RemplacementPage() {
             onChange={(e) => handleNouveauMaterielChange('numeroSerie', e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
             required
+            onKeyDown={handleKeyDown} // Empêche "Entrée"
           />
         </div>
 
@@ -220,6 +232,7 @@ export default function RemplacementPage() {
             onChange={(e) => handleNouveauMaterielChange('typeMateriel', e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
             required
+            onKeyDown={handleKeyDown} // Empêche "Entrée"
           />
         </div>
 
@@ -231,17 +244,21 @@ export default function RemplacementPage() {
             value={nouveauMateriel.dateInstallation}
             onChange={(e) => handleNouveauMaterielChange('dateInstallation', e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            onKeyDown={handleKeyDown} // Empêche "Entrée"
           />
         </div>
 
-        <div className="mt-6 flex justify-between items-center">
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Chargement...' : 'Effectuer le Remplacement'}
+        <div className="mt-6 flex justify-center">
+          <Button
+            type="submit"
+            className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded"
+            disabled={isLoading}
+          >
+            {isLoading ? 'En cours...' : 'Effectuer le remplacement'}
           </Button>
         </div>
       </form>
 
-      {error && <div className="mt-4 text-red-600">{error}</div>}
       <ToastContainer />
     </div>
   );

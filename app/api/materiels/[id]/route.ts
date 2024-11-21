@@ -14,7 +14,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const materiel = await prisma.materiel.findUnique({
       where: { id },
       include: {
-        installation: true, // Inclure les informations d'installation liées
+        installation: true,
+        materielRemplace: true,
         remplacementsPrecedents: {
           include: { ancienMateriel: true }
         },

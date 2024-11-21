@@ -8,24 +8,26 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'ID invalide' }, { status: 400 });
     }
 
-    // Supprimez d'abord les matériels associés à l'installation
-    await prisma.materiel.deleteMany({
-      where: { installationId: id }, // Assurez-vous que cette clé étrangère est correcte
+    // Supprimez d'abord les remplacements associés à l'installation
+    await prisma.remplacement.deleteMany({
+      where: { installationId: id },
     });
 
-    // Ensuite, supprimez l'installation
+    // Ensuite, supprimez les matériels associés à l'installation
+    await prisma.materiel.deleteMany({
+      where: { installationId: id },
+    });
+
+    // Enfin, supprimez l'installation
     const deletedInstallation = await prisma.installation.delete({
       where: { id },
     });
 
-    // Retournez une réponse JSON si l'opération de suppression est réussie
-    return NextResponse.json({ message: 'Installation et matériels supprimés avec succès', deletedInstallation });
+    return NextResponse.json({ message: 'Installation, matériels et remplacements supprimés avec succès', deletedInstallation });
   } catch (error) {
-    console.error('Erreur lors de la suppression de l\'installation et des matériels:', error);
-
-    // Assurez-vous de retourner un objet JSON même en cas d'erreur
+    console.error('Erreur lors de la suppression de l\'installation:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la suppression de l\'installation et des matériels' },
+      { error: 'Erreur lors de la suppression de l\'installation', details: error },
       { status: 500 }
     );
   }
@@ -40,6 +42,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const data = await request.json();
 
+    // Récupérez l'installation existante avec ses matériels
+    const existingInstallation = await prisma.installation.findUnique({
+      where: { id },
+      include: { materiels: true },
+    });
+
+    if (!existingInstallation) {
+      return NextResponse.json({ error: 'Installation non trouvée' }, { status: 404 });
+    }
+
+    // Mettez à jour l'installation
     const updatedInstallation = await prisma.installation.update({
       where: { id },
       data: {
@@ -51,13 +64,28 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         dateFacture: data.dateFacture ? new Date(data.dateFacture) : null,
         status: data.status,
         materiels: {
-          deleteMany: {}, // Supprime tous les matériels existants
-          create: data.materiels.map((materiel: any) => ({
-            marque: materiel.marque,
-            modele: materiel.modele,
-            numeroSerie: materiel.numeroSerie,
-            typeMateriel: materiel.typeMateriel,
-            dateInstallation: new Date(materiel.dateInstallation),
+          // Au lieu de supprimer tous les matériels, mettez à jour ceux qui existent déjà
+          // et créez de nouveaux matériels si nécessaire
+          upsert: data.materiels.map((materiel: any) => ({
+            where: {
+              id: materiel.id || 'new-id-' + Math.random().toString(36).substr(2, 9),
+            },
+            update: {
+              marque: materiel.marque,
+              modele: materiel.modele,
+              numeroSerie: materiel.numeroSerie,
+              typeMateriel: materiel.typeMateriel,
+              dateInstallation: new Date(materiel.dateInstallation),
+              status: materiel.status,
+            },
+            create: {
+              marque: materiel.marque,
+              modele: materiel.modele,
+              numeroSerie: materiel.numeroSerie,
+              typeMateriel: materiel.typeMateriel,
+              dateInstallation: new Date(materiel.dateInstallation),
+              status: materiel.status,
+            },
           })),
         },
       },
@@ -68,7 +96,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   } catch (error) {
     console.error('Erreur lors de la mise à jour de l\'installation:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la mise à jour de l\'installation' },
+      { error: 'Erreur lors de la mise à jour de l\'installation', details: error },
       { status: 500 }
     );
   }

@@ -1,23 +1,39 @@
 "use client"
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Materiel } from '@prisma/client';
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FaTools, FaBoxOpen } from 'react-icons/fa';
+import { FaPlus, FaTools, FaBoxOpen, FaCalendarAlt, FaBarcode } from 'react-icons/fa';
+
+// Définition du type Materiel basé sur votre schéma Prisma
+type Materiel = {
+  id: string;
+  marque: string;
+  modele: string;
+  numeroSerie: string;
+  typeMateriel: string;
+  dateInstallation: string;
+  status: 'INSTALLE' | 'REMPLACE' | 'EN_REPARATION';
+  remplacementsSuivants?: Array<{
+    dateRemplacement: string;
+    nouveauMateriel: {
+      marque: string;
+      modele: string;
+    };
+  }>;
+};
 
 export default function SuiviMaterielPage() {
   const [materiels, setMateriels] = useState<Materiel[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [installationId, setInstallationId] = useState<number | null>(null);  // Installation ID state
+  const [installationId, setInstallationId] = useState<number | null>(null);
 
-  // Fonction pour récupérer les matériels depuis l'API
   useEffect(() => {
     const fetchMateriels = async () => {
-      const queryParams = installationId ? `?installationId=${installationId}` : '';  // Ajout de l'ID si disponible
+      const queryParams = installationId ? `?installationId=${installationId}` : '';
       try {
         const response = await fetch(`/api/materiels${queryParams}`);
         if (!response.ok) {
@@ -33,24 +49,21 @@ export default function SuiviMaterielPage() {
     };
 
     fetchMateriels();
-  }, [installationId]);  // Dépend de installationId
+  }, [installationId]);
 
-  // Filtrer les matériels en fonction du terme de recherche
   const filteredMateriels = useMemo(() => {
     return materiels.filter(materiel =>
-      materiel.marque?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      materiel.modele?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      materiel.numeroSerie?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      materiel.typeMateriel?.toLowerCase().includes(searchTerm.toLowerCase())
+      materiel.marque.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      materiel.modele.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      materiel.numeroSerie.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      materiel.typeMateriel.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [materiels, searchTerm]);
 
-  // Trier les matériels par date d'installation
   const sortedMateriels = useMemo(() => {
     return filteredMateriels.sort((a, b) => new Date(b.dateInstallation).getTime() - new Date(a.dateInstallation).getTime());
   }, [filteredMateriels]);
 
-  // Afficher un écran de chargement
   if (isLoading) return (
     <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
       <div className="grid grid-cols-1 gap-8">
@@ -66,18 +79,26 @@ export default function SuiviMaterielPage() {
     </div>
   );
 
-  // Afficher une erreur si la récupération échoue
   if (error) return (
     <div className="text-red-500 text-center mt-10 text-xl">{error}</div>
   );
 
-  // Fonction pour formater la date au format français
   const formatDateFr = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
+  };
+
+  const getStatusIcon = (status: string, typeMateriel: string) => {
+    if (status === 'REMPLACE') {
+      return <FaTools className="text-xl mr-2 text-orange-600" />;
+    } else if (typeMateriel === 'outil') {
+      return <FaTools className="text-xl mr-2 text-blue-600" />;
+    } else {
+      return <FaBoxOpen className="text-xl mr-2 text-green-600" />;
+    }
   };
 
   return (
@@ -102,16 +123,12 @@ export default function SuiviMaterielPage() {
             <Link key={materiel.id} href={`/materiels/${materiel.id}`} passHref>
               <Card className={`border-l-4 p-6 rounded-lg shadow-lg transition duration-300 hover:bg-gray-100 hover:border-blue-600`}>
                 <div className="flex items-center mb-4">
-                  {materiel.typeMateriel === 'outil' ? (
-                    <FaTools className="text-xl mr-2 text-blue-600" />
-                  ) : (
-                    <FaBoxOpen className="text-xl mr-2 text-green-600" />
-                  )}
+                  {getStatusIcon(materiel.status, materiel.typeMateriel)}
                   <h2 className="text-xl font-semibold text-card-foreground">{materiel.marque} {materiel.modele}</h2>
                 </div>
                 <p><span className="font-medium">Type :</span> {materiel.typeMateriel}</p>
-                <p><span className="font-medium">Numéro de série :</span> {materiel.numeroSerie}</p>
-                <p><span className="font-medium">Installé le :</span> {formatDateFr(materiel.dateInstallation)}</p>
+                <p className="flex items-center"><FaBarcode className="mr-2" /> <span className="font-medium">Numéro de série :</span> {materiel.numeroSerie}</p>
+                <p className="flex items-center"><FaCalendarAlt className="mr-2" /> <span className="font-medium">Installé le :</span> {formatDateFr(materiel.dateInstallation)}</p>
               </Card>
             </Link>
           ))}

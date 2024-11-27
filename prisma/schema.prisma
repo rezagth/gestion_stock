@@ -8,60 +8,60 @@ datasource db {
 }
 
 model Installation {
-  id             Int          @id @default(autoincrement())
-  nom            String
-  client         String
-  boutique       String
-  dateCreation   DateTime     @default(now()) // Date de création
-  dateMiseAJour  DateTime     @updatedAt       // Date mise à jour automatique
-  numeroFacture  String?
-  dateFacture    DateTime?
-  organisation   String
-  status         InstallationStatus @default(ACTIVE) // Statut de l'installation
-  materiels      Materiel[]   @relation("InstallationMateriels")
-  remplacements  Remplacement[] // Liste des remplacements liés à cette installation
+  id            Int                @id @default(autoincrement())
+  nom           String
+  client        String
+  boutique      String
+  dateCreation  DateTime           @default(now()) // Date de création
+  dateMiseAJour DateTime           @updatedAt // Date mise à jour automatique
+  numeroFacture String?
+  dateFacture   DateTime?
+  organisation  String
+  status        InstallationStatus @default(ACTIVE) // Statut de l'installation
+  materiels     Materiel[]         @relation("InstallationMateriels")
+  remplacements Remplacement[] // Liste des remplacements liés à cette installation
 
-  createdAt      DateTime     @default(now()) // Date de création
-  updatedAt      DateTime     @updatedAt      // Date de mise à jour automatique
+  createdAt DateTime @default(now()) // Date de création
+  updatedAt DateTime @updatedAt // Date de mise à jour automatique
 }
 
 model Materiel {
-  id                      String        @id @default(cuid())
+  id                      String         @id @default(cuid())
   marque                  String
   modele                  String
   numeroSerie             String
   typeMateriel            String
   dateInstallation        DateTime
   installationId          Int
-  installation            Installation  @relation("InstallationMateriels", fields: [installationId], references: [id])
+  installation            Installation   @relation("InstallationMateriels", fields: [installationId], references: [id])
   remplacementsPrecedents Remplacement[] @relation("AncienMateriel") // Remplacements où ce matériel a été remplacé
   remplacementsSuivants   Remplacement[] @relation("NouveauMateriel") // Remplacements où ce matériel a été installé
-  
+
   // Référence au matériel qui a remplacé ce matériel, s'il existe
-  materielRemplaceId      String?       @unique 
-  materielRemplace        Materiel?     @relation("MaterielRemplace", fields: [materielRemplaceId], references: [id])
+  materielRemplaceId String?   @unique
+  materielRemplace   Materiel? @relation("MaterielRemplace", fields: [materielRemplaceId], references: [id])
 
   // Ajout de la relation inverse : matériel qui a été remplacé par ce matériel
-  materielsRemplacants    Materiel[]    @relation("MaterielRemplace") // Matériels qui ont remplacé ce matériel
+  materielsRemplacants Materiel[] @relation("MaterielRemplace") // Matériels qui ont remplacé ce matériel
 
-  createdAt               DateTime     @default(now()) // Date de création
-  updatedAt               DateTime     @updatedAt       // Date de mise à jour automatique
+  createdAt DateTime @default(now()) // Date de création
+  updatedAt DateTime @updatedAt // Date de mise à jour automatique
 
-  status                  MaterielStatus @default(INSTALLE)
+  status MaterielStatus @default(INSTALLE)
 }
 
 model Remplacement {
-  id                String     @id @default(cuid())
+  id                String       @id @default(cuid())
   dateRemplacement  DateTime
   ancienMaterielId  String
   nouveauMaterielId String
   installationId    Int
   installation      Installation @relation(fields: [installationId], references: [id])
-  ancienMateriel    Materiel    @relation("AncienMateriel", fields: [ancienMaterielId], references: [id])
-  nouveauMateriel   Materiel    @relation("NouveauMateriel", fields: [nouveauMaterielId], references: [id])
+  ancienMateriel    Materiel     @relation("AncienMateriel", fields: [ancienMaterielId], references: [id])
+  nouveauMateriel   Materiel     @relation("NouveauMateriel", fields: [nouveauMaterielId], references: [id])
 
-  createdAt         DateTime   @default(now()) // Date de création
-  updatedAt         DateTime   @updatedAt       // Date de mise à jour automatique
+  createdAt DateTime @default(now()) // Date de création
+  updatedAt DateTime @updatedAt // Date de mise à jour automatique
 }
 
 enum InstallationStatus {
@@ -72,7 +72,40 @@ enum InstallationStatus {
 }
 
 enum MaterielStatus {
-  INSTALLE   // Matériel installé
-  REMPLACE   // Matériel remplacé
+  INSTALLE // Matériel installé
+  REMPLACE // Matériel remplacé
   EN_REPARATION // Matériel en réparation
+}
+
+model Installation_License {
+  id             Int       @id @default(autoincrement())
+  nomPoste       String
+  organisation   String    @default("American Vintage")
+  nomUtilisateur String
+  numeroFacture  String
+  dateFacture    DateTime
+  licenses       License[] @relation("InstallationLicenses")
+}
+
+model License {
+  id             String                @id @default(cuid())
+  typeLicense    LicenseType
+  description    String? // Changement de 'motif' à 'description' (facultatif)
+  installationId Int
+  installation   Installation_License @relation("InstallationLicenses", fields: [installationId], references: [id])
+}
+
+enum LicenseType {
+  STARMAG3
+  STARGEST
+  PREPATAB_WINDOWS
+  PREPATAB_ANDROID
+  PREPATAB_RETAIL_ANDROID
+}
+
+enum LicenseStatus {
+  ACTIVE
+  EXPIRE
+  SUSPENDU
+  EN_ATTENTE
 }

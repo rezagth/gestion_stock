@@ -85,6 +85,8 @@ model Installation_License {
   numeroFacture  String
   dateFacture    DateTime
   licenses       License[] @relation("InstallationLicenses")
+  createdAt DateTime @default(now()) // Date de création
+  updatedAt DateTime @updatedAt // Date de mise à jour automatique
 }
 
 model License {
@@ -93,6 +95,8 @@ model License {
   description    String? // Changement de 'motif' à 'description' (facultatif)
   installationId Int
   installation   Installation_License @relation("InstallationLicenses", fields: [installationId], references: [id])
+  createdAt DateTime @default(now()) // Date de création
+  updatedAt DateTime @updatedAt // Date de mise à jour automatique
 }
 
 enum LicenseType {
@@ -103,9 +107,4 @@ enum LicenseType {
   PREPATAB_RETAIL_ANDROID
 }
 
-enum LicenseStatus {
-  ACTIVE
-  EXPIRE
-  SUSPENDU
-  EN_ATTENTE
-}
+

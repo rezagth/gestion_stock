@@ -55,6 +55,8 @@ CREATE TABLE `Installation_License` (
     `nomUtilisateur` VARCHAR(191) NOT NULL,
     `numeroFacture` VARCHAR(191) NOT NULL,
     `dateFacture` DATETIME(3) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -65,6 +67,8 @@ CREATE TABLE `License` (
     `typeLicense` ENUM('STARMAG3', 'STARGEST', 'PREPATAB_WINDOWS', 'PREPATAB_ANDROID', 'PREPATAB_RETAIL_ANDROID') NOT NULL,
     `description` VARCHAR(191) NULL,
     `installationId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

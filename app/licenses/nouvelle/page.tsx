@@ -6,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface License {
   typeLicense: string;
@@ -14,7 +22,7 @@ interface License {
 
 interface FormData {
   nomPoste: string;
-  nomUtilisateur: string; // Added user name field
+  nomUtilisateur: string;
   organisation: string;
   numeroFacture: string;
   dateFacture: string;
@@ -35,7 +43,7 @@ export default function CreateInstallationLicense() {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     nomPoste: '',
-    nomUtilisateur: '', // Initialize user name
+    nomUtilisateur: '',
     organisation: 'American Vintage',
     numeroFacture: '',
     dateFacture: getCurrentDate(),
@@ -43,6 +51,7 @@ export default function CreateInstallationLicense() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, index?: number) => {
     const { name, value } = e.target;
@@ -71,8 +80,12 @@ export default function CreateInstallationLicense() {
     }));
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirm = async () => {
     setLoading(true);
     try {
       const response = await fetch('/api/licenses', {
@@ -90,6 +103,13 @@ export default function CreateInstallationLicense() {
       toast.error(err instanceof Error ? err.message : 'Une erreur inconnue est survenue');
     } finally {
       setLoading(false);
+      setIsConfirmOpen(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
   };
 
@@ -97,7 +117,7 @@ export default function CreateInstallationLicense() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">Créer une nouvelle installation de licence</h1>
-        <form onSubmit={handleSubmit} className="bg-white shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4 space-y-6">
+        <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="bg-white shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="nomPoste" className="block text-sm font-medium text-gray-700">Nom du poste</label>
@@ -116,7 +136,7 @@ export default function CreateInstallationLicense() {
               <input
                 id="nomUtilisateur"
                 type="text"
-                name="nomUtilisateur" // User name field
+                name="nomUtilisateur"
                 value={formData.nomUtilisateur}
                 onChange={handleChange}
                 required
@@ -130,7 +150,7 @@ export default function CreateInstallationLicense() {
                 type="text"
                 name="organisation"
                 value={formData.organisation}
-                readOnly // Set as read-only with fixed value
+                readOnly
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100"
               />
             </div>
@@ -160,7 +180,6 @@ export default function CreateInstallationLicense() {
             </div>
           </div>
 
-          {/* Licenses Section */}
           <div className="mt-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Licences</h2>
             {formData.licenses.map((license, index) => (
@@ -197,8 +216,6 @@ export default function CreateInstallationLicense() {
                     />
                   </div>
                 </div>
-
-                {/* Remove License Button */}
                 {formData.licenses.length > 1 && (
                   <Button variant="destructive" onClick={() => removeLicense(index)} className="mt-4">
                     Supprimer cette licence
@@ -206,21 +223,37 @@ export default function CreateInstallationLicense() {
                 )}
               </Card>
             ))}
-            {/* Add License Button */}
             <Button variant="outline" onClick={addLicense} className="mt-4">
               Ajouter une licence
             </Button>
           </div>
 
-          {/* Submit Button */}
           <div className="mt-8">
-            <Button type="submit" disabled={loading} className="w-full py-2 px-4">
-              {loading ? 'Création en cours...' : 'Créer l\'installation et les licences'}
+            <Button type="submit" className="w-full py-2 px-4">
+              Créer l'installation et les licences
             </Button>
           </div>
         </form>
+        
+        <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirmer la création</DialogTitle>
+              <DialogDescription>
+                Êtes-vous sûr de vouloir créer cette installation de licence ?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsConfirmOpen(false)}>
+                Annuler
+              </Button>
+              <Button onClick={handleConfirm} disabled={loading}>
+                {loading ? 'Création en cours...' : 'Confirmer'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-        {/* Toast Notifications */}
         <ToastContainer />
       </div>
     </div>

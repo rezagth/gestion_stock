@@ -166,7 +166,7 @@ export default function InstallationsPage() {
                       <div>
                         <p className="text-gray=600"><span className="font-medium text-gray=700">Numéro de Facture:</span> {installation.numeroFacture || 'Non spécifié'}</p>
                         <p className="text-gray=600"><span className="font-medium text-gray=700">Date de Facture:</span> {installation.dateFacture ? new Date(installation.dateFacture).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Date de création:</span> {new Date(installation.dateCreation).toLocaleDateString('fr-FR')}</p>
+                        <p className="text-gray=600"><span className="font-medium text-gray=700">Date de création:</span> {new Date(installation.createdAt).toLocaleDateString('fr-FR')}</p>
                       </div>
                     </div>
                     

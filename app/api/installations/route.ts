@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     console.log('Données reçues:', data);
 
     // Validation des données reçues
-    if (!data || !data.nom || !data.client || !data.boutique || !data.materiels || !Array.isArray(data.materiels)) {
+    if (!data || !data.nom || !data.client || !data.boutique || !data.materiels ||!data.organisation || !Array.isArray(data.materiels)) {
       return NextResponse.json({ error: 'Données manquantes ou incorrectes' }, { status: 400 });
     }
 

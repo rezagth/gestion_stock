@@ -8,8 +8,8 @@ import { Toaster } from 'react-hot-toast';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Gestion Stock',
-  description: 'Application de gestion de stock',
+  title: 'Gestion des installations',
+  description: 'Application de gestion d\'installation matériel et de licence',
 };
 
 export default function RootLayout({

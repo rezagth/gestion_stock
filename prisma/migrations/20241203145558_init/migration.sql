@@ -69,6 +69,24 @@ CREATE TABLE `License` (
     `installationId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `status` ENUM('INSTALLEE', 'REMPLACEE', 'INACTIVE') NOT NULL DEFAULT 'INSTALLEE',
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Remplacement_License` (
+    `id` VARCHAR(191) NOT NULL,
+    `dateRemplacement` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `motif` VARCHAR(191) NULL,
+    `installationLicenseId` INTEGER NOT NULL,
+    `licenseId` VARCHAR(191) NOT NULL,
+    `ancienNomPoste` VARCHAR(191) NOT NULL,
+    `nouveauNomPoste` VARCHAR(191) NOT NULL,
+    `ancienNomUtilisateur` VARCHAR(191) NOT NULL,
+    `nouveauNomUtilisateur` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -90,3 +108,9 @@ ALTER TABLE `Remplacement` ADD CONSTRAINT `Remplacement_nouveauMaterielId_fkey` 
 
 -- AddForeignKey
 ALTER TABLE `License` ADD CONSTRAINT `License_installationId_fkey` FOREIGN KEY (`installationId`) REFERENCES `Installation_License`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Remplacement_License` ADD CONSTRAINT `Remplacement_License_installationLicenseId_fkey` FOREIGN KEY (`installationLicenseId`) REFERENCES `Installation_License`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Remplacement_License` ADD CONSTRAINT `Remplacement_License_licenseId_fkey` FOREIGN KEY (`licenseId`) REFERENCES `License`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

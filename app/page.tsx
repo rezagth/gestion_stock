@@ -1,105 +1,361 @@
 'use client';
 
 import Link from 'next/link';
-import { Card } from "@/components/ui/card"; // Importation du composant Card de Shadcn
-import { Button } from "@/components/ui/button"; // Importation du composant Button de Shadcn
-import { FaPlus, FaClipboardList, FaChartPie } from 'react-icons/fa';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Monitor, 
+  History, 
+  Activity,
+  PlusCircle, 
+  BarChart3, 
+  Clock,
+  Package,
+  Key,
+  Users,
+  Settings,
+  ArrowRight,
+  Ticket,
+  Box,
+  Repeat
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+interface Installation {
+  id: number;
+  nomPoste: string;
+  nomUtilisateur: string;
+  organisation: string;
+  createdAt: string;
+  isLicense: boolean;
+  numeroFacture: string | null;
+  dateFacture: string | null;
+  materiel: {
+    marque: string;
+    modele: string;
+    type: string;
+    numeroSerie: string;
+  } | null;
+}
+
+interface Remplacement {
+  id: number;
+  ancienNomPoste: string;
+  nouveauNomPoste: string;
+  dateRemplacement: string;
+  motif: string;
+  type: 'materiel' | 'license';
+  organisation: string;
+  nouveauNomUtilisateur: string | null;
+  ancienNomUtilisateur: string | null;
+  materiel: {
+    marque: string;
+    modele: string;
+    type: string;
+    numeroSerie: string;
+  } | null;
+}
+
+interface Remplacement_License {
+  id: number;
+  dateRemplacement: string;
+  ancienNomPoste: string;
+  nouveauNomPoste: string;
+  ancienNomUtilisateur: string;
+  nouveauNomUtilisateur: string;
+  motif: string;
+  license: {
+    id: number;
+    typeLicense: string;
+    status: string;
+    description: string;
+    createdAt: string;
+  };
+  installation: {
+    id: number;
+    nomPoste: string;
+    nomUtilisateur: string;
+    organisation: string;
+    numeroFacture: string | null;
+    dateFacture: string | null;
+    createdAt: string;
+  };
+}
+
+interface License {
+  id: number;
+  nomPoste: string;
+  nomUtilisateur: string;
+  organisation: string;
+  createdAt: string;
+  typeLicense: string;
+}
+
 export default function HomePage() {
-  const [totals, setTotals] = useState({ installations: 0, remplacements: 0, materiels: 0 });
+  const [totals, setTotals] = useState({ 
+    installations: {
+      materiel: 0,
+      license: 0,
+      total: 0
+    },
+    remplacements: { 
+      materiel: 0,
+      license: 0,
+      total: 0
+    }, 
+    materiels: 0,
+    licenses: 0
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTotals = async () => {
+    const fetchData = async () => {
       try {
-        const installationsResponse = await fetch('/api/installations');
-        const installationsData = await installationsResponse.json();
-        const remplacementsResponse = await fetch('/api/remplacements');
-        const remplacementsData = await remplacementsResponse.json();
-        const materielsResponse = await fetch('/api/materiels');
-        const materielsData = await materielsResponse.json();
+        // Récupérer toutes les données nécessaires
+        const [
+          installationsRes, 
+          remplacementsRes, 
+          materielsRes, 
+          licensesRes, 
+          licensesInstallationsRes,
+          licenseRemplacementsRes
+        ] = await Promise.all([
+          fetch('/api/installations'),
+          fetch('/api/remplacements'),
+          fetch('/api/materiels'),
+          fetch('/api/licenses'),
+          fetch('/api/licenses'),
+          fetch('/api/licenses/remplacements')
+        ]);
+
+        if (!licenseRemplacementsRes.ok) {
+          throw new Error('Erreur lors de la récupération des remplacements de licences');
+        }
+
+        const [
+          installations, 
+          remplacements, 
+          materiels, 
+          licenses, 
+          licensesInstallations,
+          licenseReplacements
+        ] = await Promise.all([
+          installationsRes.json(),
+          remplacementsRes.json(),
+          materielsRes.json(),
+          licensesRes.json(),
+          licensesInstallationsRes.json(),
+          licenseRemplacementsRes.json()
+        ]);
+
+        // Séparer les installations par type
+        const materielInstallations = installations.filter(i => !i.isLicense);
+        const licenseInstallations = licensesInstallations;
+
+        // Séparer les remplacements par type
+        const materielReplacements = remplacements.remplacements ? 
+          remplacements.remplacements.filter(r => !r.isLicense) : [];
+
+        // S'assurer que licenseReplacements est un tableau
+        const licenseReplacementsData = Array.isArray(licenseReplacements) ? licenseReplacements : [];
 
         setTotals({
-          installations: installationsData.length,
-          remplacements: remplacementsData.length,
-          materiels: materielsData.length,
+          installations: {
+            materiel: materielInstallations.length,
+            license: licenseInstallations.length,
+            total: materielInstallations.length + licenseInstallations.length
+          },
+          remplacements: {
+            materiel: materielReplacements.length,
+            license: licenseReplacementsData.length,
+            total: materielReplacements.length + licenseReplacementsData.length
+          },
+          materiels: materiels.length,
+          licenses: licenses.length,
         });
+
       } catch (error) {
-        console.error("Erreur lors de la récupération des totaux", error);
+        console.error("Erreur lors de la récupération des données:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchTotals();
+    fetchData();
   }, []);
 
+  const features = [
+    {
+      icon: <Monitor className="w-8 h-8 text-blue-500" />,
+      title: "Gestion du Matériel",
+      description: "Créer facilement et visualiser des installations et des remplacements de matériel (même pour Daniel)"
+    },
+    {
+      icon: <Key className="w-8 h-8 text-green-500" />,
+      title: "Gestion des Licences AMV",
+      description: "Créer facilement et visualiser des installations et des remplacements de licences AMV (même pour Daniel)"
+    },
+    {
+      icon: <History className="w-8 h-8 text-purple-500" />,
+      title: "historique des remplacements",
+      description: "Accédez à l'historique des remplacements de license et des matériels et des modifications"
+    },
+    {
+      icon: <Repeat className="w-8 h-8 text-orange-500" />,
+      title: "Gestion des remplacements",
+      description: "Gérez les remplacements sur toute les installations matériels et licences AMV"
+    }
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-6 bg-white">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Bienvenue dans l'application de gestion des installations</h1>
-      
-      <div className="flex justify-center space-x-4 mb-6">
-        <Link 
-          href="/installations/nouvelle" 
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md text-lg font-medium flex items-center"
-        >
-          <FaPlus className="mr-2" /> Nouvelle Installation
-        </Link>
-        <Link 
-          href="/remplacements/nouveau" 
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300 shadow-md text-lg font-medium flex items-center"
-        >
-          <FaPlus className="mr-2" /> Nouveau Remplacement
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Gestion d'installation
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Plateforme centralisée pour la gestion des installations matériel et licences AMV
+          </p>
+        </div>
 
-      {/* Grille pour les statistiques et les dernières installations/remplacements */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
-        
-        {/* Statistiques */}
-        <Link href="/statistiques" className="flex flex-col">
-          <Card className="p-4 border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition duration-300 flex flex-col items-center">
-            <FaChartPie className="text-blue-600 mb-2" size={40} />
-            <h2 className="text-xl font-semibold mb-2">Statistiques</h2>
-            <div className="flex flex-col space-y-1">
-              <div className="flex justify-between w-full">
-                <span>Total Installations:</span>
-                <span className="font-bold">{totals.installations}</span>
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-12">
+          <Link href="/installations/">
+            <Button 
+              className="w-full h-16 text-lg gap-3 bg-blue-600 hover:bg-blue-700"
+            >
+              <Box className="w-6 h-6" />
+              Liste des installations matériels
+            </Button>
+          </Link>
+          <Link href="/licenses/">
+            <Button 
+              className="w-full h-16 text-lg gap-3 bg-green-600 hover:bg-green-700"
+            >
+              <Box className="w-6 h-6" />
+              Liste des installations licences
+            </Button>
+          </Link>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {features.map((feature, index) => (
+            <Card key={index} className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="rounded-full w-16 h-16 flex items-center justify-center bg-gray-50 mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Matériel Statistics */}
+          <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Monitor className="w-5 h-5 text-blue-500" />
+                Statistiques Matériel
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Total installations</span>
+                  <Badge variant="secondary" className="text-blue-600 bg-blue-50">
+                    {totals.installations.materiel}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Total matériels</span>
+                  <Badge variant="secondary" className="text-purple-600 bg-purple-50">
+                    {totals.materiels}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Total remplacements</span>
+                  <Badge variant="secondary" className="text-orange-600 bg-orange-50">
+                    {totals.remplacements.materiel}
+                  </Badge>
+                </div>
               </div>
-              <div className="flex justify-between w-full">
-                <span>Total Remplacements:</span>
-                <span className="font-bold">{totals.remplacements}</span>
-              </div>
-              <div className="flex justify-between w-full">
-                <span>Total Matériels:</span>
-                <span className="font-bold">{totals.materiels}</span>
-              </div>
-            </div>
+            </CardContent>
           </Card>
-        </Link>
 
-        {/* Dernières Installations */}
-        <Card className="p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-md hover:shadow-lg transition duration=300">
-          <h2 className="text-xl font-semibold mb-4">Dernières Installations</h2>
-          {/* Ici, vous pouvez ajouter une liste des dernières installations */}
-          <Link href="/installations" className="text-blue-600 hover:underline flex items-center">
-            <FaClipboardList className="mr-2" /> Voir toutes les installations
-          </Link>
-        </Card>
+          {/* Licenses Statistics */}
+          <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Key className="w-5 h-5 text-green-500" />
+                Statistiques Licences AMV
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Total installations</span>
+                  <Badge variant="secondary" className="text-blue-600 bg-blue-50">
+                    {totals.installations.license}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Total licences</span>
+                  <Badge variant="secondary" className="text-green-600 bg-green-50">
+                    {totals.licenses}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Total remplacements</span>
+                  <Badge variant="secondary" className="text-orange-600 bg-orange-50">
+                    {totals.remplacements.license}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Derniers Remplacements */}
-        <Card className="p-4 bg-green-50 border border-green-200 rounded-lg shadow-md hover:shadow-lg transition duration=300">
-          <h2 className="text-xl font-semibold mb-4">Derniers Remplacements</h2>
-          {/* Ici, vous pouvez ajouter une liste des derniers remplacements */}
-          <Link href="/remplacements/" className="text-green-600 hover:underline flex items-center">
-            <FaClipboardList className="mr-2" /> Voir tous les remplacements
-          </Link>
-        </Card>
-
+          {/* Total Statistics */}
+          <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-gray-500" />
+                Statistiques Globales
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600">Total Installations</span>
+                  <Badge variant="secondary" className="text-blue-600 bg-blue-50">
+                    {totals.installations.total}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600">Total Remplacements</span>
+                  <Badge variant="secondary" className="text-orange-600 bg-orange-50">
+                    {totals.remplacements.total}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600">Total Équipements</span>
+                  <Badge variant="secondary" className="text-purple-600 bg-purple-50">
+                    {totals.materiels + totals.licenses}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-
-      {/* Bouton d'Information Supplémentaire */}
-      <Button variant="outline" className="mt-6 w-full max-w-xs">
-        En savoir plus sur l'application
-      </Button>
     </div>
   );
 }

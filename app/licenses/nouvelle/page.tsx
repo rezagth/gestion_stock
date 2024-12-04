@@ -230,7 +230,7 @@ export default function CreateInstallationLicense() {
 
           <div className="mt-8">
             <Button type="submit" className="w-full py-2 px-4">
-              Créer l'installation et les licences
+              Créer l'installation de licence
             </Button>
           </div>
         </form>

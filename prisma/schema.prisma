@@ -84,19 +84,40 @@ model Installation_License {
   nomUtilisateur String
   numeroFacture  String
   dateFacture    DateTime
-  licenses       License[] @relation("InstallationLicenses")
-  createdAt DateTime @default(now()) // Date de création
-  updatedAt DateTime @updatedAt // Date de mise à jour automatique
+  licenses       License[]
+  remplacements  Remplacement_License[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model License {
-  id             String                @id @default(cuid())
+  id             String               @id @default(cuid())
   typeLicense    LicenseType
-  description    String? // Changement de 'motif' à 'description' (facultatif)
+  description    String?
   installationId Int
-  installation   Installation_License @relation("InstallationLicenses", fields: [installationId], references: [id])
-  createdAt DateTime @default(now()) // Date de création
-  updatedAt DateTime @updatedAt // Date de mise à jour automatique
+  installation   Installation_License @relation(fields: [installationId], references: [id])
+  remplacements  Remplacement_License[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  status         LicenseStatus        @default(INSTALLEE)
+}
+
+model Remplacement_License {
+  id                   String               @id @default(cuid())
+  dateRemplacement     DateTime             @default(now())
+  motif                String?
+  installationLicenseId Int
+  installationLicense  Installation_License @relation(fields: [installationLicenseId], references: [id])
+  licenseId            String
+  license              License              @relation(fields: [licenseId], references: [id])
+  
+  ancienNomPoste       String
+  nouveauNomPoste      String
+  ancienNomUtilisateur String
+  nouveauNomUtilisateur String
+  
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
 }
 
 enum LicenseType {
@@ -107,4 +128,8 @@ enum LicenseType {
   PREPATAB_RETAIL_ANDROID
 }
 
-
+enum LicenseStatus {
+  INSTALLEE
+  REMPLACEE
+  INACTIVE
+}

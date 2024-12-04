@@ -4,8 +4,6 @@ CREATE TABLE `Installation` (
     `nom` VARCHAR(191) NOT NULL,
     `client` VARCHAR(191) NOT NULL,
     `boutique` VARCHAR(191) NOT NULL,
-    `dateCreation` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `dateMiseAJour` DATETIME(3) NOT NULL,
     `numeroFacture` VARCHAR(191) NULL,
     `dateFacture` DATETIME(3) NULL,
     `organisation` VARCHAR(191) NOT NULL,

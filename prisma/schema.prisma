@@ -12,8 +12,6 @@ model Installation {
   nom           String
   client        String
   boutique      String
-  dateCreation  DateTime           @default(now()) // Date de création
-  dateMiseAJour DateTime           @updatedAt // Date mise à jour automatique
   numeroFacture String?
   dateFacture   DateTime?
   organisation  String

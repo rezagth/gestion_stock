@@ -10,7 +10,7 @@ function formatRemplacement(remplacement: any) {
     installation: remplacement.installation ? {
       id: remplacement.installation.id,
       nom: remplacement.installation.nom,
-      dateCreation: remplacement.installation.dateCreation.toISOString(),
+      dateCreation: remplacement.installation.createdAt.toISOString(),
       organisation: remplacement.installation.organisation || 'Non spécifiée',
     } : null,
     ancienMateriel: remplacement.ancienMateriel ? {

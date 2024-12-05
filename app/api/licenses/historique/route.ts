@@ -47,9 +47,9 @@ export async function GET(request: Request) {
         description: remplacement.license.description
       },
       installation: {
-        organisation: remplacement.installationLicense.organisation,
-        numeroFacture: remplacement.installationLicense.numeroFacture,
-        dateFacture: remplacement.installationLicense.dateFacture
+        organisation: remplacement.installation_License.organisation,
+        numeroFacture: remplacement.installation_License.numeroFacture,
+        dateFacture: remplacement.installation_License.dateFacture
       }
     }));
 

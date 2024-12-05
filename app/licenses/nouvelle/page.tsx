@@ -202,6 +202,7 @@ export default function CreateInstallationLicense() {
                       <option value="PREPATAB_WINDOWS">PREPATAB WINDOWS</option>
                       <option value="PREPATAB_ANDROID">PREPATAB ANDROID</option>
                       <option value="PREPATAB_RETAIL_ANDROID">PREPATAB RETAIL ANDROID</option>
+                      <option value="STAR_EDI">STAR EDI</option>
                     </select>
                   </div>
                   <div>

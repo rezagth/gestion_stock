@@ -126,6 +126,8 @@ enum LicenseType {
   PREPATAB_WINDOWS
   PREPATAB_ANDROID
   PREPATAB_RETAIL_ANDROID
+  STAR_EDI
+
 }
 
 enum LicenseStatus {

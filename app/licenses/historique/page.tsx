@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,14 @@ interface Remplacement {
 }
 
 export default function HistoriquePage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <HistoriqueContent />
+    </Suspense>
+  );
+}
+
+function HistoriqueContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const installationId = searchParams.get("installationId");

@@ -6,7 +6,7 @@ import { Installation, Materiel } from '@prisma/client';
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FaChevronDown, FaChevronUp, FaPlus, FaTools, FaBoxOpen, FaCalendarAlt, FaBarcode, FaEdit, FaTrashAlt, FaWrench, FaBox } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp, FaPlus, FaTools, FaBoxOpen, FaCalendarAlt, FaBarcode, FaEdit, FaTrashAlt, FaWrench, FaBox, FaTable } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -133,6 +133,7 @@ export default function InstallationsPage() {
         <Link href="/installations/nouvelle" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md text-center w-full sm:w-auto">
           <FaPlus className="inline mr-2" /> Nouvelle Installation
         </Link>
+
       </div>
       <div className="mb-6">
         <Input
@@ -169,7 +170,7 @@ export default function InstallationsPage() {
                         <p className="text-gray=600"><span className="font-medium text-gray=700">Date de création:</span> {new Date(installation.createdAt).toLocaleDateString('fr-FR')}</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex space-x-4">
                       {/* Matériels Installés */}
                       <div className="w-1/2">
@@ -184,7 +185,7 @@ export default function InstallationsPage() {
                               <p className="text-sm text-gray-600"> <FaBox className="inline mr-1" /><span>Type: </span> {materiel.typeMateriel}</p>
                               <p className="text-sm text-gray-600"><FaBarcode className="inline mr-1" /> S/N: {materiel.numeroSerie}</p>
                               <p className="text-sm text-gray-600"><FaCalendarAlt className="inline mr-1" /> Installé le: {new Date(materiel.dateInstallation).toLocaleDateString('fr-FR')}</p>
-                              
+
                             </div>
                           ))}
                         </div>
@@ -204,7 +205,7 @@ export default function InstallationsPage() {
                                 <p className="text-sm text-gray-600"> <FaBox className="inline mr-1" /><span>Type: </span> {materiel.typeMateriel}</p>
                                 <p className="text-sm text-gray-600"><FaBarcode className="inline mr-1" /> S/N: {materiel.numeroSerie}</p>
                                 <p className="text-sm text-gray-600"><FaCalendarAlt className="inline mr-1" /> Remplacé le: {new Date(materiel.dateInstallation).toLocaleDateString('fr-FR')}</p>
-                                
+
                               </div>
                             ))}
                           </div>
@@ -222,6 +223,9 @@ export default function InstallationsPage() {
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration=300">
                         <FaTrashAlt className="mr-2" /> Supprimer
                       </button>
+                      <Link href={`/installations/${installation.id}/tableau`} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-300 mr-2">
+                        <FaTable className="inline mr-2" /> Voir en tableau
+                      </Link>
                     </div>
                   </div>
                 ))}

@@ -1,6 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+
+
+// Méthode GET pour récupérer les détails d'une installation par ID
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  try {
+    const id = parseInt(params.id);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+    }
+
+    // Récupère l'installation avec les relations
+    const installation = await prisma.installation.findUnique({
+      where: { id },
+      include: {
+        materiels: {
+          include: {
+            remplacementsPrecedents: true,
+            remplacementsSuivants: true,
+          },
+        },
+        remplacements: true,
+      },
+    });
+
+    if (!installation) {
+      return NextResponse.json({ error: "Installation non trouvée" }, { status: 404 });
+    }
+
+    return NextResponse.json(installation, { status: 200 });
+  } catch (error) {
+    console.error("Erreur API:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération des détails de l'installation" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = parseInt(params.id);

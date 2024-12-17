@@ -14,7 +14,7 @@ interface EditInstallationFormProps {
 export default function EditInstallationForm({ installation }: EditInstallationFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState(installation);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({}); // Errors object
   const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -45,12 +45,43 @@ export default function EditInstallationForm({ installation }: EditInstallationF
     }));
   }, [installation.id]);
 
-  const removeMateriel = useCallback((index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      materiels: prev.materiels.filter((_, i) => i !== index)
-    }));
-  }, []);
+  const removeMateriel = useCallback(async (index: number) => {
+    const materiel = formData.materiels[index];
+    
+    // Si c'est un nouveau matériel (pas encore en base de données), on le supprime juste localement
+    if (materiel.id.startsWith('new-')) {
+      setFormData(prev => ({
+        ...prev,
+        materiels: prev.materiels.filter((_, i) => i !== index)
+      }));
+      return;
+    }
+
+    // Sinon, on demande confirmation et on supprime en base de données
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?')) {
+      try {
+        const response = await fetch(`/api/materiels/${materiel.id}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Erreur lors de la suppression du matériel');
+        }
+
+        // Si la suppression a réussi, on met à jour l'état local
+        setFormData(prev => ({
+          ...prev,
+          materiels: prev.materiels.filter((_, i) => i !== index)
+        }));
+        
+        toast.success('Matériel supprimé avec succès');
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        toast.error(error.message || 'Erreur lors de la suppression du matériel');
+      }
+    }
+  }, [formData.materiels]);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};

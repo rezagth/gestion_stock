@@ -66,6 +66,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         materiels: {
           // Au lieu de supprimer tous les matériels, mettez à jour ceux qui existent déjà
           // et créez de nouveaux matériels si nécessaire
+      
           upsert: data.materiels.map((materiel: any) => ({
             where: {
               id: materiel.id || 'new-id-' + Math.random().toString(36).substr(2, 9),

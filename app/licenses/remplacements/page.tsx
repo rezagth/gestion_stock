@@ -1,6 +1,7 @@
 // app/licenses/remplacements/page.tsx
 'use client';
 
+import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -48,6 +49,14 @@ const getStatusText = (status: string) => {
 };
 
 export default function RemplacementPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <RemplacementContent />
+    </Suspense>
+  );
+}
+
+function RemplacementContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialId = searchParams.get('id');

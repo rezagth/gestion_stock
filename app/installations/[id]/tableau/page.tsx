@@ -230,8 +230,8 @@ export default function TableauInstallation() {
         body: rows,
         theme: 'striped',
         styles: {
-          fontSize: 10,
-          cellPadding: 4,
+          fontSize: 11,
+          cellPadding: 2,
           textColor: [0, 0, 0],
           lineColor: [180, 180, 180],
           lineWidth: 0.3,

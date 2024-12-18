@@ -120,7 +120,7 @@ export default function TableauInstallation() {
       const logoY = 10;
   
       // Dessiner un cadre autour du logo pour une meilleure structure
-      doc.rect(logoX - 2, logoY - 2, logoWidth + 4, logoHeight + 4, 'S');
+      // doc.rect(logoX - 2, logoY - 2, logoWidth + 4, logoHeight + 4, 'S');
       doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
   
       // Ajouter un titre principal sous le logo

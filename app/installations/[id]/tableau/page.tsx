@@ -157,9 +157,8 @@ export default function TableauInstallation() {
       // Informations détaillées
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      // text en gras et en noir
       doc.setTextColor(0, 0, 0);
-     
+  
       doc.text(
         [
           `Installation: ${data.nom}`,
@@ -197,9 +196,10 @@ export default function TableauInstallation() {
         'Modèle',
         'N° Série',
         'Date Installation',
-        'Status',
+        'Status',  // Assurez-vous que 'Status' est bien dans les en-têtes
       ];
   
+      // Traitement des données pour le tableau
       const rows = data.materiels.map((materiel) => [
         materiel.typeMateriel || '',
         materiel.marque || '',
@@ -208,9 +208,28 @@ export default function TableauInstallation() {
         materiel.dateInstallation
           ? format(new Date(materiel.dateInstallation), 'dd/MM/yyyy', { locale: fr })
           : '',
-        materiel.status || '',
+        // Remplacer "installé" par "I" et "remplacement" par "R"
+        materiel.status === 'installé' ? 'I' :
+        materiel.status === 'remplacement' ? 'R' : materiel.status || '',  // Assurez-vous d'afficher le statut ici
       ]);
   
+      // Calcul dynamique des largeurs de colonne en fonction du contenu
+      const columnStyles = headers.map((header, index) => {
+        const longestText = Math.max(
+          ...rows.map((row) => row[index]?.length || 0),
+          header.length
+        );
+        
+        // Définir la largeur minimum pour chaque colonne (en mm)
+        const minCellWidth = 30; 
+        const maxCellWidth = 70;  // Limiter la largeur des colonnes
+  
+        // Ajuster la largeur des colonnes en fonction du contenu
+        const adjustedWidth = Math.min(Math.max(minCellWidth, longestText * 1.5), maxCellWidth);
+        return { cellWidth: adjustedWidth };
+      });
+  
+      // Utilisation de `autoTable` avec ajustement des largeurs de colonnes
       (doc as any).autoTable({
         startY: tableStartY,
         head: [headers],
@@ -231,7 +250,12 @@ export default function TableauInstallation() {
         alternateRowStyles: {
           fillColor: [245, 245, 245],
         },
+        columnStyles: columnStyles.reduce((acc, style, index) => {
+          acc[index] = style;
+          return acc;
+        }, {}),
         margin: { left: 14, right: 14 },
+        tableWidth: 'auto', // Ajuste automatiquement la largeur des colonnes
       });
   
       // Signature et date en bas de page
@@ -244,9 +268,7 @@ export default function TableauInstallation() {
       doc.text('Signature:', logoX, signatureY);
   
       // Dessiner une ligne pour la signature
-      // avec la bare un peu plus en bas de la signature
       doc.line(logoX, signatureY + 10, logoX + 100, signatureY + 10);
-
   
       // Ajouter une barre de séparation au bas de la page
       doc.setDrawColor(200, 200, 200);
@@ -271,10 +293,6 @@ export default function TableauInstallation() {
       toast.error('Impossible de charger le logo');
     };
   };
-  
-  
-  
-
   if (loading) {
     // skeleton loading
     return (

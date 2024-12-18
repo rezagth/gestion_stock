@@ -210,26 +210,20 @@ export default function TableauInstallation() {
           : '',
         // Remplacer "installé" par "I" et "remplacement" par "R"
         materiel.status === 'installé' ? 'I' :
-        materiel.status === 'remplacement' ? 'R' : materiel.status || '',  // Assurez-vous d'afficher le statut ici
+        materiel.status === 'remplacement' ? 'R' : materiel.status || '',  // Afficher "I" ou "R" pour status
       ]);
   
-      // Calcul dynamique des largeurs de colonne en fonction du contenu
-      const columnStyles = headers.map((header, index) => {
-        const longestText = Math.max(
-          ...rows.map((row) => row[index]?.length || 0),
-          header.length
-        );
-        
-        // Définir la largeur minimum pour chaque colonne (en mm)
-        const minCellWidth = 30; 
-        const maxCellWidth = 70;  // Limiter la largeur des colonnes
+      // Définition des largeurs de colonnes fixes
+      const columnStyles = {
+        0: { cellWidth: 40 }, // Type de Matériel
+        1: { cellWidth: 30 }, // Marque
+        2: { cellWidth: 30 }, // Modèle
+        3: { cellWidth: 40 }, // N° Série
+        4: { cellWidth: 27 }, // Date Installation
+        5: { cellWidth: 25 }, // Status (I/R)
+      };
   
-        // Ajuster la largeur des colonnes en fonction du contenu
-        const adjustedWidth = Math.min(Math.max(minCellWidth, longestText * 1.5), maxCellWidth);
-        return { cellWidth: adjustedWidth };
-      });
-  
-      // Utilisation de `autoTable` avec ajustement des largeurs de colonnes
+      // Utilisation de `autoTable` avec texte qui se met à la ligne si nécessaire
       (doc as any).autoTable({
         startY: tableStartY,
         head: [headers],
@@ -241,6 +235,8 @@ export default function TableauInstallation() {
           textColor: [0, 0, 0],
           lineColor: [180, 180, 180],
           lineWidth: 0.3,
+          overflow: 'linebreak', // Force le texte à se mettre à la ligne
+          columnWidth: 'auto', // Garder la largeur des colonnes constante
         },
         headStyles: {
           fillColor: [52, 152, 219], // Bleu clair
@@ -250,10 +246,7 @@ export default function TableauInstallation() {
         alternateRowStyles: {
           fillColor: [245, 245, 245],
         },
-        columnStyles: columnStyles.reduce((acc, style, index) => {
-          acc[index] = style;
-          return acc;
-        }, {}),
+        columnStyles: columnStyles,
         margin: { left: 14, right: 14 },
         tableWidth: 'auto', // Ajuste automatiquement la largeur des colonnes
       });
@@ -292,7 +285,9 @@ export default function TableauInstallation() {
       console.error('Erreur lors du chargement du logo');
       toast.error('Impossible de charger le logo');
     };
-  };
+};
+
+  
   if (loading) {
     // skeleton loading
     return (

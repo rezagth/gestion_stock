@@ -215,10 +215,10 @@ export default function TableauInstallation() {
   
       // Définition des largeurs de colonnes fixes
       const columnStyles = {
-        0: { cellWidth: 40 }, // Type de Matériel
+        0: { cellWidth: 35 }, // Type de Matériel
         1: { cellWidth: 30 }, // Marque
         2: { cellWidth: 30 }, // Modèle
-        3: { cellWidth: 40 }, // N° Série
+        3: { cellWidth: 35 }, // N° Série
         4: { cellWidth: 27 }, // Date Installation
         5: { cellWidth: 25 }, // Status (I/R)
       };
@@ -369,7 +369,7 @@ export default function TableauInstallation() {
                 <div className="flex items-center">
                   <span className="text-gray-600 min-w-[100px]">Date:</span>
                   <span className="font-medium text-gray-900">
-                    {data?.dateFacture ? format(new Date(data.dateFacture), 'dd/MM/yyyy', { locale: fr }) : '-'}
+                    {data?.dateFacture ? format(new Date(data.dateFacture), 'dd/MM/yyyy', { locale: fr }) : 'Pas de date'}
                   </span>
                 </div>
               </div>

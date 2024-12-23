@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Clock, History, RefreshCw, Search, X, Plus } from "lucide-react";
+import { Clock, History, RefreshCw, Search, X, Plus, Edit } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -232,7 +232,7 @@ export default function LicensesPage() {
                     </div>
                     <div>
                       <p className="font-semibold">Organisation</p>
-                      <Badge variant="secondary">{installation.organisation}</Badge>
+                      <Badge variant="secondary" className='hover:bg-blue-300'>{installation.organisation}</Badge>
                     </div>
                     <div>
                       <p className="font-semibold">N° Facture</p>
@@ -250,8 +250,10 @@ export default function LicensesPage() {
                       </div>
                     </div>
                   </div>
+              
                 </div>
-                <div className="flex gap-2">
+                
+                <div className='flex space-x-3'>
                   <Button
                     variant="outline"
                     size="sm"
@@ -261,7 +263,17 @@ export default function LicensesPage() {
                     <History className="w-4 h-4 mr-1 text-blue-600" />
                     Historique
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={()=> router.push(`/licenses/edition?installationId=${installation.id}`)}
+                    className="hover:bg-blue-50 transition-colors duration-300 flex items-center"
+                  >
+                    <Edit className="w-4 h-4 mr-1 text-blue-600" />
+                    Edition
+                  </Button>
                 </div>
+              
               </div>
             </CardHeader>
             <CardContent>

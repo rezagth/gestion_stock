@@ -165,7 +165,7 @@ export default function TableauInstallation() {
           `Client: ${data.client}`,
           `Boutique: ${data.boutique}`,
           `Organisation: ${data.organisation}`,
-          `N° Facture: ${data.numeroFacture} N/A`,
+          `N° Facture: ${data.numeroFacture}`,
           `Date Facture: ${
             data.dateFacture
               ? format(new Date(data.dateFacture), 'dd/MM/yyyy', { locale: fr })

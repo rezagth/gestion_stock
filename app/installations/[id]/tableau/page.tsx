@@ -101,7 +101,6 @@ export default function TableauInstallation() {
     }
   ];
 
-
   const generatePDF = () => {
     if (!data) return;
   

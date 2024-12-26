@@ -3,12 +3,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Installation, Materiel } from '@prisma/client';
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FaChevronDown, FaChevronUp, FaPlus, FaTools, FaBoxOpen, FaCalendarAlt, FaBarcode, FaEdit, FaTrashAlt, FaWrench, FaBox, FaTable } from 'react-icons/fa';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Button } from "@/components/ui/button";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { toast, useToast } from '@/hooks/use-toast';
+import { FaPlus, FaTools, FaBoxOpen, FaCalendarAlt, FaBarcode, FaEdit, FaTrashAlt, FaWrench, FaBox, FaTable } from 'react-icons/fa';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
 
 type InstallationWithDetails = Installation & { materiels: Materiel[]; };
 
@@ -18,6 +25,14 @@ export default function InstallationsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedOrgs, setExpandedOrgs] = useState<{ [key: string]: boolean }>({});
+  const [showReplacedMaterials, setShowReplacedMaterials] = useState(false);
+  const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = () => setIsDialogOpen(true);
+  const closeDialog = () => setIsDialogOpen(false);
+  
+
 
   useEffect(() => {
     const fetchInstallations = async () => {
@@ -30,7 +45,11 @@ export default function InstallationsPage() {
         setInstallations(data);
       } catch (err) {
         setError("Erreur lors du chargement des installations");
-        toast.error("Erreur lors du chargement des installations");
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible de charger les installations",
+        });
       } finally {
         setIsLoading(false);
       }
@@ -39,42 +58,23 @@ export default function InstallationsPage() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette installation ?')) {
-      try {
-        const response = await fetch(`/api/installations/${id}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) {
-          throw new Error('Échec de la suppression de l\'installation');
-        }
-        setInstallations(installations.filter(installation => installation.id !== id));
-        toast.success('Installation supprimée avec succès');
-      } catch (err) {
-        console.error(err);
-        toast.error('Erreur lors de la suppression de l\'installation');
+    try {
+      const response = await fetch(`/api/installations/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Échec de la suppression de l\'installation');
       }
-    }
-  };
-
-  const handleDeleteMateriel = async (id: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?')) {
-      try {
-        const response = await fetch(`/api/materiels/${id}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) {
-          throw new Error('Échec de la suppression du matériel');
-        }
-        toast.success('Matériel supprimé avec succès');
-        // Recharger les installations après suppression
-        setInstallations(installations.map(installation => ({
-          ...installation,
-          materiels: installation.materiels.filter(materiel => materiel.id !== id)
-        })));
-      } catch (err) {
-        console.error(err);
-        toast.error('Erreur lors de la suppression du matériel');
-      }
+      setInstallations(installations.filter(installation => installation.id !== id));
+      toast({
+        title: "Succès",
+        description: "Installation supprimée avec succès",
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression de l'installation",
+      });
     }
   };
 
@@ -102,137 +102,162 @@ export default function InstallationsPage() {
     return groups;
   }, [filteredInstallations]);
 
-  const toggleOrg = (org: string) => {
-    setExpandedOrgs(prev => ({ ...prev, [org]: !prev[org] }));
-  };
-
-  if (isLoading) return (
-    <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
-      <div className="grid grid-cols-1 gap-8">
-        {[...Array(3)].map((_, index) => (
-          <Card key={index} className="p-6 bg-white border rounded-lg shadow-lg">
-            <Skeleton className="h-6 mb-4" />
-            <Skeleton className="h-4 mb-2" />
-            <Skeleton className="h-4 mb-2" />
-            <Skeleton className="h-4 mb-2" />
-          </Card>
-        ))}
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-10">
+        <div className="grid gap-4">
+          {[...Array(3)].map((_, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <Skeleton className="h-6 mb-4" />
+                <Skeleton className="h-4 mb-2" />
+                <Skeleton className="h-4 mb-2" />
+                <Skeleton className="h-4" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
-  if (error) return (
-    <div className="text-red-500 text-center mt-10 text-xl">{error}</div>
-  );
+  if (error) {
+    return (
+      <Card className="bg-red-100 text-red-800 p-4 mx-auto mt-10">
+        {error}
+      </Card>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
-      <ToastContainer />
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Liste des Installations</h1>
-        <Link href="/installations/nouvelle" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md text-center w-full sm:w-auto">
-          <FaPlus className="inline mr-2" /> Nouvelle Installation
-        </Link>
-
+    <div className="container mx-auto py-10">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Liste des Installations</h1>
+        <Button asChild className="bg-blue-100 text-blue-600 hover:bg-blue-200">
+          <Link href="/installations/nouvelle" className="py-2 px-4 rounded-md flex items-center">
+            <FaPlus className="mr-2" />
+            Nouvelle Installation
+          </Link>
+        </Button>
       </div>
-      <div className="mb-6">
+
+      <div className="flex items-center space-x-4 mb-6">
         <Input
           type="text"
           placeholder="Rechercher par nom, numéro de série, numéro de facture ou boutique"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+          className="flex-grow"
         />
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="show-replaced"
+            checked={showReplacedMaterials}
+            onCheckedChange={setShowReplacedMaterials}
+          />
+          <Label htmlFor="show-replaced">Afficher les matériels remplacés</Label>
+        </div>
       </div>
+
       {Object.keys(groupedInstallations).length === 0 ? (
-        <Card className="text-gray-500 text-center text-lg bg-white p-8 rounded-lg shadow">Aucune installation trouvée.</Card>
+        <Card className="text-center p-8">Aucune installation trouvée.</Card>
       ) : (
-        Object.entries(groupedInstallations).map(([org, orgInstallations]) => (
-          <Card key={org} className="mb-6 bg-white border rounded-lg shadow-lg overflow-hidden">
-            <div className="p-4 bg-gray-100 flex justify-between items-center cursor-pointer" onClick={() => toggleOrg(org)}>
-              <h2 className="text-xl font-semibold text-gray-800">{org}</h2>
-              {expandedOrgs[org] ? <FaChevronUp /> : <FaChevronDown />}
-            </div>
-            {expandedOrgs[org] && (
-              <div className="p-4">
+        <Accordion type="single" collapsible className="space-y-4">
+          {Object.entries(groupedInstallations).map(([org, orgInstallations]) => (
+            <AccordionItem key={org} value={org}>
+              <AccordionTrigger>{org}</AccordionTrigger>
+              <AccordionContent>
                 {orgInstallations.map((installation) => (
-                  <div key={installation.id} className="mb-4 last:mb-0 p-4 bg-white rounded-lg shadow">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{installation.nom}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-4">
-                      <div>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Organisation:</span> {installation.organisation || 'Non spécifiée'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Client:</span> {installation.client}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Boutique:</span> {installation.boutique}</p>
+                  <Card key={installation.id} className="mb-4">
+                    <CardHeader>
+                      <h3 className="text-lg font-semibold">{installation.nom}</h3>
+                    </CardHeader>
+                    <CardContent>
+                      <Table>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell className="font-medium">Organisation</TableCell>
+                            <TableCell>{installation.organisation}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Client</TableCell>
+                            <TableCell>{installation.client}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Boutique</TableCell>
+                            <TableCell>{installation.boutique}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Numéro de Facture</TableCell>
+                            <TableCell>{installation.numeroFacture || 'Non spécifié'}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Date de Facture</TableCell>
+                            <TableCell>{installation.dateFacture ? new Date(installation.dateFacture).toLocaleDateString('fr-FR') : 'Non spécifiée'}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Date de création</TableCell>
+                            <TableCell>{new Date(installation.createdAt).toLocaleDateString('fr-FR')}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                      <div className="mt-4">
+                        <h4 className="font-semibold mb-2">Matériels Installés</h4>
+                        {installation.materiels.filter(materiel => materiel.status === 'INSTALLE').map(materiel => (
+                          <Badge key={materiel.id} variant="outline" className="mr-2 mb-2 text-green-700 bg-green-100 hover:bg-green-200">
+                            {materiel.typeMateriel} 
+                          </Badge>
+                        ))}
                       </div>
-                      <div>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Numéro de Facture:</span> {installation.numeroFacture || 'Non spécifié'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Date de Facture:</span> {installation.dateFacture ? new Date(installation.dateFacture).toLocaleDateString('fr-FR') : 'Non spécifiée'}</p>
-                        <p className="text-gray=600"><span className="font-medium text-gray=700">Date de création:</span> {new Date(installation.createdAt).toLocaleDateString('fr-FR')}</p>
-                      </div>
-                    </div>
 
-                    <div className="flex space-x-4">
-                      {/* Matériels Installés */}
-                      <div className="w-1/2">
-                        <h5 className="font-medium text-blue-600 mb-2 flex items-center">
-                          <FaTools className="mr-2" />
-                          Matériels Installés
-                        </h5>
-                        <div>
-                          {installation.materiels.filter(materiel => materiel.status === 'INSTALLE').map(materiel => (
-                            <div key={materiel.id} className="p-4 bg-blue-50 rounded-md shadow-md mb-4">
-                              <p className="font-bold text-blue-600">{materiel.marque} {materiel.modele}</p>
-                              <p className="text-sm text-gray-600"> <FaBox className="inline mr-1" /><span>Type: </span> {materiel.typeMateriel}</p>
-                              <p className="text-sm text-gray-600"><FaBarcode className="inline mr-1" /> S/N: {materiel.numeroSerie}</p>
-                              <p className="text-sm text-gray-600"><FaCalendarAlt className="inline mr-1" /> Installé le: {new Date(materiel.dateInstallation).toLocaleDateString('fr-FR')}</p>
-
-                            </div>
+                      {showReplacedMaterials && installation.materiels.some(materiel => materiel.status === 'REMPLACE') && (
+                        <div className="mt-4">
+                          <h4 className="font-semibold mb-2">Matériels Remplacés</h4>
+                          {installation.materiels.filter(materiel => materiel.status === 'REMPLACE').map(materiel => (
+                            <Badge key={materiel.id} variant="outline" className="mr-2 mb-2 text-red-700 bg-red-100 hover:bg-red-200">
+                              {materiel.typeMateriel}
+                            </Badge>
                           ))}
                         </div>
-                      </div>
-
-                      {/* Matériels Remplacés */}
-                      {installation.materiels.some(materiel => materiel.status === 'REMPLACE') && (
-                        <div className="w-1/2">
-                          <h5 className="font-medium text-red-600 mb-2 flex items-center">
-                            <FaBoxOpen className="mr-2" />
-                            Matériels Remplacés
-                          </h5>
-                          <div>
-                            {installation.materiels.filter(materiel => materiel.status === 'REMPLACE').map(materiel => (
-                              <div key={materiel.id} className="p-4 bg-red-50 rounded-md shadow-md mb-4">
-                                <p className="font-bold text-red-600">{materiel.marque} {materiel.modele}</p>
-                                <p className="text-sm text-gray-600"> <FaBox className="inline mr-1" /><span>Type: </span> {materiel.typeMateriel}</p>
-                                <p className="text-sm text-gray-600"><FaBarcode className="inline mr-1" /> S/N: {materiel.numeroSerie}</p>
-                                <p className="text-sm text-gray-600"><FaCalendarAlt className="inline mr-1" /> Remplacé le: {new Date(materiel.dateInstallation).toLocaleDateString('fr-FR')}</p>
-
-                              </div>
-                            ))}
-                          </div>
-                        </div>
                       )}
-                    </div>
-
-                    {/* Boutons Modifier et Supprimer */}
-                    <div className="flex justify-end mt-4">
-                      <Link href={`/installations/${installation.id}/edit`} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration=300 mr-2">
-                        <FaEdit className="mr-2" /> Modifier
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(installation.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration=300">
-                        <FaTrashAlt className="mr-2" /> Supprimer
-                      </button>
-                      <Link href={`/installations/${installation.id}/tableau`} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-300 mr-2">
-                        <FaTable className="inline mr-2" /> Voir en tableau
-                      </Link>
-                    </div>
-                  </div>
+                    </CardContent>
+                    <CardFooter className="justify-end space-x-2">
+                      <Button asChild variant="outline" className='bg-blue-100 text-blue-600 hover:bg-blue-200'>
+                        <Link href={`/installations/${installation.id}/edit`}>
+                          <FaEdit className="mr-2 " /> Modifier
+                        </Link>
+                      </Button>
+                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="destructive" >
+                            <FaTrashAlt className="mr-2" /> Supprimer
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Confirmer la suppression de ({installation.nom})</DialogTitle>
+                            <DialogDescription>
+                              Êtes-vous sûr de vouloir supprimer cette installation ? Cette action est irréversible.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={closeDialog}>Annuler</Button>
+                            <Button variant="destructive" onClick={() => handleDelete(installation.id)}>Supprimer</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Button asChild variant="outline" className='bg-blue-100 text-blue-600 hover:bg-blue-200'>
+                        <Link href={`/installations/${installation.id}/tableau`}>
+                          <FaTable className="mr-2" /> Voir en détail
+                        </Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
                 ))}
-              </div>
-            )}
-          </Card>
-        ))
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       )}
     </div>
   );

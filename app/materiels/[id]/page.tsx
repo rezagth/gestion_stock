@@ -26,20 +26,20 @@ const MaterielDetail: React.FC = () => {
     const fetchMaterielDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/materiels/${encodeURIComponent(id as string)}`);
+        const response = await fetch(`/api/materiel-details/${encodeURIComponent(id as string)}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setMateriel(data);
         toast.success('Détails du matériel chargés avec succès !');
         if (data.status === 'REMPLACE'){
-            toast.warning('Ce matériel a été remplacé !', {
-                position: "top-center",
-                autoClose : 5000,
-                hideProgressBar : false,
-                closeOnClick : true,
-                pauseOnHover : true,
-                draggable : true,
-            })
+          toast.warning('Ce matériel a été remplacé !', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
         }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Une erreur inconnue est survenue";
@@ -48,7 +48,6 @@ const MaterielDetail: React.FC = () => {
       } finally {
         setIsLoading(false);
       }
-      
     };
 
     fetchMaterielDetails();

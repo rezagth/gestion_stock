@@ -27,12 +27,15 @@ export default function InstallationsPage() {
   const [expandedOrgs, setExpandedOrgs] = useState<{ [key: string]: boolean }>({});
   const [showReplacedMaterials, setShowReplacedMaterials] = useState(false);
   const { toast } = useToast();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [installationToDelete, setInstallationToDelete] = useState<{ id: number; nom: string } | null>(null);
 
-  const openDialog = () => setIsDialogOpen(true);
-  const closeDialog = () => setIsDialogOpen(false);
-  
+  const openDeleteDialog = (id: number, nom: string) => {
+    setInstallationToDelete({ id, nom });
+  };
 
+  const closeDeleteDialog = () => {
+    setInstallationToDelete(null);
+  };
 
   useEffect(() => {
     const fetchInstallations = async () => {
@@ -63,11 +66,22 @@ export default function InstallationsPage() {
       if (!response.ok) {
         throw new Error('Échec de la suppression de l\'installation');
       }
-      setInstallations(installations.filter(installation => installation.id !== id));
+      
+      // Recharger les installations après la suppression
+      const refreshResponse = await fetch('/api/installations');
+      if (!refreshResponse.ok) {
+        throw new Error('Échec du rechargement des installations');
+      }
+      const refreshedData = await refreshResponse.json();
+      setInstallations(refreshedData);
+
       toast({
         title: "Succès",
         description: "Installation supprimée avec succès",
       });
+      
+      // Fermer le dialogue après la suppression
+      closeDeleteDialog();
     } catch (err) {
       console.error(err);
       toast({
@@ -227,25 +241,14 @@ export default function InstallationsPage() {
                           <FaEdit className="mr-2 " /> Modifier
                         </Link>
                       </Button>
-                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                          <Button variant="destructive" >
-                            <FaTrashAlt className="mr-2" /> Supprimer
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Confirmer la suppression de ({installation.nom})</DialogTitle>
-                            <DialogDescription>
-                              Êtes-vous sûr de vouloir supprimer cette installation ? Cette action est irréversible.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <DialogFooter>
-                            <Button variant="outline" onClick={closeDialog}>Annuler</Button>
-                            <Button variant="destructive" onClick={() => handleDelete(installation.id)}>Supprimer</Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                      <Button
+                        variant="destructive"
+                        onClick={() => openDeleteDialog(installation.id, installation.nom)}
+                        className="flex items-center"
+                      >
+                        <FaTrashAlt className="h-4 w-4 mr-2" />
+                        Supprimer
+                      </Button>
                       <Button asChild variant="outline" className='bg-blue-100 text-blue-600 hover:bg-blue-200'>
                         <Link href={`/installations/${installation.id}/tableau`}>
                           <FaTable className="mr-2" /> Voir en détail
@@ -259,6 +262,28 @@ export default function InstallationsPage() {
           ))}
         </Accordion>
       )}
+      <Dialog open={installationToDelete !== null} onOpenChange={() => closeDeleteDialog()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Supprimer l&apos;installation {installationToDelete?.nom}</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer l&apos;installation &quot;{installationToDelete?.nom}&quot; ? Cette action ne peut pas être annulée.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeDeleteDialog}>
+              Annuler
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => installationToDelete && handleDelete(installationToDelete.id)}
+            >
+              <FaTrashAlt className="mr-2" />
+              Supprimer l&apos;installation
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

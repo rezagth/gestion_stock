@@ -16,6 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AiOutlineLoading } from "react-icons/ai";
 
 interface Materiel {
   id: string;
@@ -483,7 +484,9 @@ export default function TableauInstallation() {
                 </p>
               </>
             ) : (
-              <p>Chargement des données du matériel de remplacement...</p>
+              <div className="flex justify-center items-center h-full">
+                <AiOutlineLoading className="animate-spin text-3xl" />
+              </div>
             )}
           </div>
           <DialogFooter>

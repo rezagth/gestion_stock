@@ -69,7 +69,7 @@ export default function TableauInstallation() {
   }, [id]);
 
   useEffect(() => {
-    console.log('selectedMateriel changed:', selectedMateriel);
+
     const fetchReplacementMateriel = async () => {
       if (selectedMateriel && selectedMateriel.status === 'REMPLACE') {
         try {
@@ -78,7 +78,7 @@ export default function TableauInstallation() {
           const materielData = await response.json();
           
           console.log('Response:', materielData);
-          
+            
           if (response.ok) {
             setReplacementMateriel(materielData);
           } else {
@@ -328,7 +328,7 @@ export default function TableauInstallation() {
   };
 
   const openDialog = (materiel: Materiel) => {
-    console.log('Opening dialog for materiel:', materiel);
+
     setSelectedMateriel(materiel);
     setIsDialogOpen(true);
   };
@@ -367,7 +367,7 @@ export default function TableauInstallation() {
     <div className="container mx-auto p-6 space-y-8">
       <div className="flex justify-end mb-4 ">
         {/* bouton qui exporte en pdf */}
-        <Button onClick={generatePDF} className="bg-blue-600">
+        <Button  onClick={generatePDF} className="bg-blue-500 hover:bg-blue-600 rounded-xl">
           Exporter en PDF
         </Button>
       </div>
@@ -380,20 +380,20 @@ export default function TableauInstallation() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Informations Générales</CardTitle>
+                <CardTitle>Informations principal </CardTitle>
               </CardHeader>
               <CardContent>
                 <p><strong>Nom:</strong> {data?.nom}</p>
-                <p><strong>Client:</strong> {data?.client}</p>
+                <p><strong>Organisation:</strong> {data?.organisation}</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Localisation</CardTitle>
+                <CardTitle>Informations commercial</CardTitle>
               </CardHeader>
               <CardContent>
+                <p><strong>Client</strong> {data?.client}</p>
                 <p><strong>Boutique:</strong> {data?.boutique}</p>
-                <p><strong>Organisation:</strong> {data?.organisation}</p>
               </CardContent>
             </Card>
             <Card>
@@ -424,7 +424,7 @@ export default function TableauInstallation() {
                 <TableHead>Date Installation</TableHead>
                 <TableHead>Status</TableHead>
                 {data?.materiels.some(m => m.status === 'REMPLACE') && (
-                  <TableHead>Action</TableHead>
+                  <TableHead>remplacement</TableHead>
                 )}
 
               </TableRow>
@@ -442,18 +442,22 @@ export default function TableauInstallation() {
                       {materiel.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell >
                     {/* Afficher le bouton "Detail" uniquement si le statut est "REMPLACE" */}
                     {materiel.status === 'REMPLACE' && (
+                      <div >
                       <Button 
+                        className='rounded-lg '
                         variant="outline" 
                         onClick={() => {
-                          console.log('Detail button clicked for materiel:', materiel);
+                          
                           openDialog(materiel);
+                          
                         }}
                       >
                         Détail
                       </Button>
+                      </div>
                     )}
                   </TableCell>
 

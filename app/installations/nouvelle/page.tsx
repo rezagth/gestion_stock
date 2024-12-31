@@ -110,14 +110,14 @@ export default function CreateInstallation() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-12 bg-gray-50 dark:bg-gray-900 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100 mb-8">Créer une nouvelle installation</h1>
+        <h1 className="mb-8 text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100">Créer une nouvelle installation</h1>
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 dark:border-red-500 p-4 mb-6 rounded-md" role="alert">
+          <div className="p-4 mb-6 border-l-4 border-red-400 rounded-md bg-red-50 dark:bg-red-900/20 dark:border-red-500" role="alert">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400 dark:text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <svg className="w-5 h-5 text-red-400 dark:text-red-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -127,39 +127,39 @@ export default function CreateInstallation() {
             </div>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8 mb-4 space-y-6 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
               <label htmlFor="nom" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom de l'installation</label>
-              <input id="nom" type="text" name="nom" value={formData.nom} onChange={handleChange} onKeyDown={handleKeyDown} required className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
+              <input id="nom" type="text" name="nom" value={formData.nom} onChange={handleChange} onKeyDown={handleKeyDown} required className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
             </div>
             <div>
               <label htmlFor="organisation" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Organisation</label>
-              <input id="organisation" type="text" name="organisation" value={formData.organisation} onChange={handleChange} onKeyDown={handleKeyDown} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
+              <input id="organisation" type="text" name="organisation" value={formData.organisation} onChange={handleChange} onKeyDown={handleKeyDown} className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
             </div>
             <div>
               <label htmlFor="client" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Client</label>
-              <input id="client" type="text" name="client" value={formData.client} onChange={handleChange} onKeyDown={handleKeyDown} required className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
+              <input id="client" type="text" name="client" value={formData.client} onChange={handleChange} onKeyDown={handleKeyDown} required className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
             </div>
             <div>
               <label htmlFor="boutique" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Boutique</label>
-              <input id="boutique" type="text" name="boutique" value={formData.boutique} onChange={handleChange} onKeyDown={handleKeyDown} required className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
+              <input id="boutique" type="text" name="boutique" value={formData.boutique} onChange={handleChange} onKeyDown={handleKeyDown} required className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
             </div>
             <div>
               <label htmlFor="numeroFacture" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Numéro de facture</label>
-              <input id="numeroFacture" type="text" name="numeroFacture" value={formData.numeroFacture} onChange={handleChange} onKeyDown={handleKeyDown} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
+              <input id="numeroFacture" type="text" name="numeroFacture" value={formData.numeroFacture} onChange={handleChange} onKeyDown={handleKeyDown} className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
             </div>
             <div>
               <label htmlFor="dateFacture" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date de facture</label>
-              <input id="dateFacture" type="date" name="dateFacture" value={formData.dateFacture} onChange={handleChange} onKeyDown={handleKeyDown} className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
+              <input id="dateFacture" type="date" name="dateFacture" value={formData.dateFacture} onChange={handleChange} onKeyDown={handleKeyDown} className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400" />
             </div>
           </div>
           <div className="mt-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Matériels</h2>
+            <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">Matériels</h2>
             {formData.materiels.map((materiel, index) => (
-              <Card key={index} className="p-6 mb-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Matériel {index + 1}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card key={index} className="p-6 mb-4 bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-gray-100">Matériel {index + 1}</h3>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {Object.entries(materiel).map(([key, value]) => (
                     key !== 'dateInstallation' && (
                       <div key={key}>
@@ -174,7 +174,7 @@ export default function CreateInstallation() {
                           onChange={(e) => handleChange(e, index)}
                           onKeyDown={handleKeyDown}
                           required
-                          className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                          className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
                         />
                       </div>
                     )
@@ -191,8 +191,17 @@ export default function CreateInstallation() {
               Ajouter un matériel
             </Button>
           </div>
-          <div className="mt-8">
-            <Button type="submit" disabled={loading} className="w-full py-2 px-4">
+          <div className="flex justify-end space-x-4">
+            
+            <Button
+            type="button"
+            onClick={() => router.push('/installations')}
+            className="py-4 text-white transition-colors bg-gray-500 rounded-lg px-9 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700"
+          >
+            Annuler
+          </Button>
+          <Button type="submit" disabled={loading} 
+              className="py-4 text-white transition-colors bg-gray-500 rounded-lg px-9 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700">
               {loading ? 'Création en cours...' : 'Créer l\'installation'}
             </Button>
           </div>

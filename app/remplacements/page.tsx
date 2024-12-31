@@ -75,10 +75,10 @@ const Remplacements = () => {
   };
 
   if (isLoading) return (
-    <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
+    <div className="px-4 pb-12 mx-auto mt-10 max-w-7xl">
       <div className="grid grid-cols-1 gap-8">
         {[...Array(3)].map((_, index) => (
-          <Card key={index} className="p-6 bg-white dark:bg-gray-800 border rounded-lg shadow-lg">
+          <Card key={index} className="p-6 bg-white border rounded-lg shadow-lg dark:bg-gray-800">
             <CustomSkeleton className="h-6 mb-4" />
             <CustomSkeleton className="h-4 mb-2" />
             <CustomSkeleton className="h-4 mb-2" />
@@ -90,19 +90,19 @@ const Remplacements = () => {
   );
 
   if (error) return (
-    <div className="text-red-500 text-center mt-10 text-xl">{error}</div>
+    <div className="mt-10 text-xl text-center text-red-500">{error}</div>
   );
 
   return (
-    <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
+    <div className="px-4 pb-12 mx-auto mt-10 max-w-7xl">
       <ToastContainer />
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Liste des Remplacements</h1>
+      <div className="flex flex-col items-center justify-between mb-8 sm:flex-row">
+        <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100 sm:mb-0">Liste des Remplacements</h1>
         <Link 
           href="/remplacements/nouveau" 
-          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-lg transition-all duration-300 ease-in-out shadow-sm hover:shadow-md flex items-center gap-2"
+          className="flex items-center gap-2 px-6 py-2 text-gray-800 transition-all duration-300 ease-in-out bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 hover:shadow-md dark:bg-slate-800 dark:text-blue-700"
         >
-          <FaPlus className="text-gray-600" /> Nouveau Remplacement
+          <FaPlus className="text-gray-600 dark:text-blue-700 " /> Nouveau Remplacement
         </Link>
       </div>
 
@@ -112,16 +112,16 @@ const Remplacements = () => {
           placeholder="Rechercher par nom d'installation ou marque de matériel"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500 shadow-sm transition duration-200 ease-in-out"
+          className="w-full px-4 py-2 transition duration-200 ease-in-out border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
         />
       </div>
 
       {filteredAndSortedRemplacements.length === 0 ? (
-        <Card className="text-gray-500 text-center text-lg bg-white p-8 rounded-lg shadow">Aucun remplacement trouvé.</Card>
+        <Card className="p-8 text-lg text-center text-gray-500 bg-white rounded-lg shadow">Aucun remplacement trouvé.</Card>
       ) : (
         <div className="grid grid-cols-1 gap-y-8">
           {filteredAndSortedRemplacements.map((remplacement) => (
-            <Card key={remplacement.id} className="p-6 border-l-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out hover:bg-gray-50 dark:hover:bg-slate-800/50">
+            <Card key={remplacement.id} className="p-6 transition-all duration-300 ease-in-out border-l-4 rounded-lg shadow-sm hover:shadow-md hover:bg-gray-50 dark:hover:bg-slate-800/50">
               {/* Affichage des informations de l'installation */}
               <div className="mb-4">
                 <h3 className="text-lg font-semibold text-blue-600">Installation</h3>
@@ -133,8 +133,8 @@ const Remplacements = () => {
               {/* Affichage des informations sur les matériels */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
                 {/* Ancien Matériel */}
-                <div className="bg-red-50/50 dark:bg-red-900/10 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out">
-                  <h3 className="font-semibold text-red-600 flex items-center">
+                <div className="p-4 transition-all duration-300 ease-in-out rounded-lg shadow-sm bg-red-50/50 dark:bg-red-900/10 hover:shadow-md">
+                  <h3 className="flex items-center font-semibold text-red-600">
                     <FaTools className="mr-2" /> Ancien Matériel
                   </h3>
                   {remplacement.ancienMateriel ? (
@@ -149,8 +149,8 @@ const Remplacements = () => {
                 </div>
 
                 {/* Nouveau Matériel */}
-                <div className="bg-green-50/50 dark:bg-green-900/10 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out">
-                  <h3 className="font-semibold text-green-600 flex items-center">
+                <div className="p-4 transition-all duration-300 ease-in-out rounded-lg shadow-sm bg-green-50/50 dark:bg-green-900/10 hover:shadow-md">
+                  <h3 className="flex items-center font-semibold text-green-600">
                     <FaBoxOpen className="mr-2" /> Nouveau Matériel
                   </h3>
                   {remplacement.nouveauMateriel ? (

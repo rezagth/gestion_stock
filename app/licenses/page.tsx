@@ -123,10 +123,10 @@ export default function LicensesPage() {
   const LoadingSkeleton = () => (
     <div className="space-y-6">
       {[1, 2, 3].map((i) => (
-        <Card key={i} className="p-6 bg-white dark:bg-gray-800 border rounded-lg shadow-lg">
+        <Card key={i} className="p-6 bg-white border rounded-lg shadow-lg dark:bg-gray-800">
           <div className="space-y-4">
             {/* En-tête avec titre et date */}
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="space-y-2">
                 <CustomSkeleton className="h-6 mb-4" /> {/* Titre de l'installation */}
                 <div className="flex space-x-2">
@@ -138,22 +138,22 @@ export default function LicensesPage() {
             </div>
 
             {/* Liste des licences */}
-            <div className="space-y-4 mt-4">
+            <div className="mt-4 space-y-4">
               {[1, 2].map((j) => (
                 <div key={j} className="p-4 border rounded-lg">
-                  <div className="flex justify-between items-start">
+                  <div className="flex items-start justify-between">
                     <div className="space-y-2">
                       <div className="flex items-center gap-3">
-                        <CustomSkeleton className="h-5 w-32" /> {/* Type de licence */}
-                        <CustomSkeleton className="h-5 w-20" /> {/* Badge status */}
+                        <CustomSkeleton className="w-32 h-5" /> {/* Type de licence */}
+                        <CustomSkeleton className="w-20 h-5" /> {/* Badge status */}
                       </div>
-                      <CustomSkeleton className="h-4 w-64" /> {/* Description */}
+                      <CustomSkeleton className="w-64 h-4" /> {/* Description */}
                       <div className="flex items-center gap-2">
-                        <CustomSkeleton className="h-4 w-4" /> {/* Icône */}
+                        <CustomSkeleton className="w-4 h-4" /> {/* Icône */}
                         <CustomSkeleton className="h-4 w-36" /> {/* Date de création */}
                       </div>
                     </div>
-                    <CustomSkeleton className="h-8 w-24" /> {/* Bouton action */}
+                    <CustomSkeleton className="w-24 h-8" /> {/* Bouton action */}
                   </div>
                 </div>
               ))}
@@ -166,34 +166,34 @@ export default function LicensesPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-6 dark:bg-slate-900">
+      <div className="container py-6 mx-auto dark:bg-slate-900">
         <LoadingSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6 dark:bg-slate-900">
-      <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center mb-6">
+    <div className="container py-6 mx-auto dark:bg-slate-900">
+      <div className="flex flex-col mb-6 space-y-4 md:flex-row md:justify-between md:items-center">
         <h1 className="text-2xl font-bold dark:text-white">Gestion des Licences</h1>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm dark:shadow-slate-700/20 px-3 py-2">
+          <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg shadow-sm dark:bg-slate-800 dark:shadow-slate-700/20">
             <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             <Input
               type="text"
               placeholder="Rechercher une licence..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border-none focus:ring-0 w-64 dark:bg-slate-800 dark:text-white dark:placeholder-gray-400"
+              className="w-64 border-none focus:ring-0 dark:bg-slate-800 dark:text-white dark:placeholder-gray-400"
             />
             {searchTerm && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchTerm("")}
-                className="h-4 w-4 p-0 dark:hover:bg-slate-700"
+                className="w-4 h-4 p-0 dark:hover:bg-slate-700"
               >
-                <X className="h-4 w-4 dark:text-gray-400" />
+                <X className="w-4 h-4 dark:text-gray-400" />
               </Button>
             )}
           </div>
@@ -201,7 +201,7 @@ export default function LicensesPage() {
             variant="outline"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="bg-white dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700 px-3 py-2 h-10 flex items-center gap-2"
+            className="flex items-center h-10 gap-2 px-3 py-2 bg-white dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span className="text-sm">Actualiser</span>
@@ -217,9 +217,9 @@ export default function LicensesPage() {
         {filteredInstallations.map((installation) => (
           <Card key={installation.id} className="w-full dark:bg-slate-800 dark:border-slate-700 dark:shadow-lg dark:shadow-slate-700/10">
             <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
+              <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-xl mb-2 dark:text-white">
+                  <CardTitle className="mb-2 text-xl dark:text-white">
                     Installation N°{installation.id}
                   </CardTitle>
                   <div className="grid grid-cols-2 gap-4 text-sm">
@@ -233,7 +233,7 @@ export default function LicensesPage() {
                     </div>
                     <div>
                       <p className="font-semibold dark:text-gray-300">Organisation</p>
-                      <Badge variant="secondary" className="hover:bg-blue-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600">
+                      <Badge variant="secondary" className="bg-blue-200 hover:bg-blue-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600">
                         {installation.organisation}
                       </Badge>
                     </div>
@@ -259,10 +259,10 @@ export default function LicensesPage() {
                     variant="outline"
                     size="sm"
                     asChild
-                    className="dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-600"
+                    className="flex items-center transition-colors duration-300 hover:bg-blue-50 dark:hover:bg-slate-800 dark:text-white dark:border-slate-600"
                   >
                     <Link href={`/licenses/historique?installationId=${installation.id}`}>
-                      <History className="w-4 h-4 mr-2" />
+                      <History className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
                       Historique
                     </Link>
                   </Button>
@@ -270,7 +270,7 @@ export default function LicensesPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => router.push(`/licenses/edition?installationId=${installation.id}`)}
-                    className="hover:bg-blue-50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-600 transition-colors duration-300 flex items-center"
+                    className="flex items-center transition-colors duration-300 hover:bg-blue-50 dark:hover:bg-slate-800 dark:text-white dark:border-slate-600"
                   >
                     <Edit className="w-4 h-4 mr-1 text-blue-600 dark:text-blue-400" />
                     Edition
@@ -280,16 +280,16 @@ export default function LicensesPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div>
+                <div className="flex items-center justify-between">
+                  {/* <div>
                     <h3 className="text-lg font-semibold dark:text-gray-100">{installation.nomPoste}</h3>
-                    <div className="flex space-x-2 mt-1">
+                    <div className="flex mt-1 space-x-2">
                       <span className="text-sm text-gray-600 dark:text-gray-400">{installation.organisation}</span>
                       <span className="text-sm text-gray-600 dark:text-gray-400">•</span>
                       <span className="text-sm text-gray-600 dark:text-gray-400">{installation.numeroFacture}</span>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
+                  </div> */}
+                  {/* <div className="flex items-center gap-3">
                     <div className="text-sm text-gray-600 dark:text-gray-400">
                       {new Date(installation.dateFacture).toLocaleDateString('fr-FR', {
                         day: 'numeric',
@@ -297,16 +297,16 @@ export default function LicensesPage() {
                         year: 'numeric'
                       })}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="space-y-3">
                   {installation.licenses.map((license) => (
                     <div 
                       key={license.id} 
-                      className="p-4 rounded-lg border dark:border-blue-500/30 bg-white dark:bg-gray-800/80 hover:dark:bg-gray-700/50 shadow-sm hover:shadow-md transition-all duration-200"
+                      className="p-4 transition-all duration-200 bg-white border rounded-lg shadow-sm dark:border-blue-500/30 dark:bg-gray-800/80 hover:dark:bg-gray-700/50 hover:shadow-md"
                     >
-                      <div className="flex justify-between items-start">
+                      <div className="flex items-start justify-between">
                         <div className="space-y-2">
                           <div className="flex items-center gap-3">
                             <span className="font-medium dark:text-gray-200">{license.typeLicense}</span>
@@ -340,7 +340,7 @@ export default function LicensesPage() {
                             variant="outline"
                             size="sm"
                             onClick={() => handleReplace(license.id.toString(), license.typeLicense)}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-lg transition-all duration-300 ease-in-out shadow-sm hover:shadow-md flex items-center gap-2 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-600"
+                            className="flex items-center gap-2 px-6 py-2 text-gray-800 transition-all duration-300 ease-in-outhover:bg-blue-50 dark:hover:bg-slate-800 dark:text-white dark:border-slate-600"
                           >
                             <RefreshCw className="w-4 h-4 mr-1 text-orange-600 dark:text-orange-400" />
                             Remplacer
@@ -370,7 +370,7 @@ export default function LicensesPage() {
             </Button>
             <Button
               onClick={confirmReplace}
-              className="bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/10 dark:hover:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-lg transition-all duration-300 ease-in-out shadow-sm hover:shadow-md flex items-center gap-2"
+              className="flex items-center gap-2 px-4 py-2 text-blue-700 transition-all duration-300 ease-in-out rounded-lg shadow-sm bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/10 dark:hover:bg-blue-900/20 dark:text-blue-300 hover:shadow-md"
             >
               Confirmer
             </Button>

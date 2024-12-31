@@ -19,8 +19,8 @@ export default function MaterielNavBar() {
   if (!isMaterielSection) return null
 
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-blue-600 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="shadow-sm bg-gradient-to-r from-blue-600 to-blue-600 dark:from-slate-900 dark:to-slate-700">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex justify-center h-12">
           <div className="hidden sm:flex sm:space-x-8">
             {navItems.map((item) => {
@@ -35,7 +35,7 @@ export default function MaterielNavBar() {
                       : 'border-transparent text-blue-50 hover:text-white'
                     } 
                     inline-flex items-center px-3 pt-1 text-sm font-medium
-                    transition-colors duration-200 gap-2 hover:bg-blue-500/20
+                    transition-colors duration-200 gap-2 hover:bg-blue-500/20 dark:hover:bg-slate-800
                   `}
                 >
                   {item.icon}

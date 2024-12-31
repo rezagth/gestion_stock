@@ -118,7 +118,7 @@ export default function InstallationsPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-10">
+      <div className="container py-10 mx-auto">
         <div className="grid gap-4">
           {[...Array(3)].map((_, index) => (
             <Card key={index}>
@@ -137,25 +137,25 @@ export default function InstallationsPage() {
 
   if (error) {
     return (
-      <Card className="bg-red-100 text-red-800 p-4 mx-auto mt-10">
+      <Card className="p-4 mx-auto mt-10 text-red-800 bg-red-100">
         {error}
       </Card>
     );
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-8">
+    <div className="container py-10 mx-auto">
+      <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Liste des Installations</h1>
-        <Button asChild className="bg-blue-100 text-blue-600 hover:bg-blue-200">
-          <Link href="/installations/nouvelle" className="py-2 px-4 rounded-md flex items-center">
+        <Button asChild className="text-blue-600 bg-blue-100 hover:bg-blue-200">
+          <Link href="/installations/nouvelle" className="flex items-center px-4 py-2 rounded-md dark:bg-slate-800">
             <FaPlus className="mr-2" />
             Nouvelle Installation
           </Link>
         </Button>
       </div>
 
-      <div className="flex items-center space-x-4 mb-6">
+      <div className="flex items-center mb-6 space-x-4">
         <Input
           type="text"
           placeholder="Rechercher par nom, numéro de série, numéro de facture ou boutique"
@@ -174,7 +174,7 @@ export default function InstallationsPage() {
       </div>
 
       {Object.keys(groupedInstallations).length === 0 ? (
-        <Card className="text-center p-8">Aucune installation trouvée.</Card>
+        <Card className="p-8 text-center">Aucune installation trouvée.</Card>
       ) : (
         <Accordion type="single" collapsible className="space-y-4">
           {Object.entries(groupedInstallations).map(([org, orgInstallations]) => (
@@ -216,9 +216,9 @@ export default function InstallationsPage() {
                         </TableBody>
                       </Table>
                       <div className="mt-4">
-                        <h4 className="font-semibold mb-2">Matériels Installés</h4>
+                        <h4 className="mb-2 font-semibold">Matériels Installés</h4>
                         {installation.materiels.filter(materiel => materiel.status === 'INSTALLE').map(materiel => (
-                          <Badge key={materiel.id} variant="outline" className="mr-2 mb-2 text-green-700 bg-green-100 hover:bg-green-200">
+                          <Badge key={materiel.id} variant="outline" className="mb-2 mr-2 text-green-700 bg-green-100 hover:bg-green-200">
                             {materiel.typeMateriel} 
                           </Badge>
                         ))}
@@ -226,9 +226,9 @@ export default function InstallationsPage() {
 
                       {showReplacedMaterials && installation.materiels.some(materiel => materiel.status === 'REMPLACE') && (
                         <div className="mt-4">
-                          <h4 className="font-semibold mb-2">Matériels Remplacés</h4>
+                          <h4 className="mb-2 font-semibold">Matériels Remplacés</h4>
                           {installation.materiels.filter(materiel => materiel.status === 'REMPLACE').map(materiel => (
-                            <Badge key={materiel.id} variant="outline" className="mr-2 mb-2 text-red-700 bg-red-100 hover:bg-red-200">
+                            <Badge key={materiel.id} variant="outline" className="mb-2 mr-2 text-red-700 bg-red-100 hover:bg-red-200">
                               {materiel.typeMateriel}
                             </Badge>
                           ))}
@@ -236,7 +236,7 @@ export default function InstallationsPage() {
                       )}
                     </CardContent>
                     <CardFooter className="justify-end space-x-2">
-                      <Button asChild variant="outline" className='bg-blue-100 text-blue-600 hover:bg-blue-200'>
+                      <Button asChild variant="outline" className='text-blue-600 bg-blue-100 hover:bg-blue-200 dark:bg-slate-800' >
                         <Link href={`/installations/${installation.id}/edit`}>
                           <FaEdit className="mr-2 " /> Modifier
                         </Link>
@@ -244,12 +244,12 @@ export default function InstallationsPage() {
                       <Button
                         variant="destructive"
                         onClick={() => openDeleteDialog(installation.id, installation.nom)}
-                        className="flex items-center"
+                        className="flex items-center dark:bg-red-800"
                       >
-                        <FaTrashAlt className="h-4 w-4 mr-2" />
+                        <FaTrashAlt className="w-4 h-4 mr-2"  />
                         Supprimer
                       </Button>
-                      <Button asChild variant="outline" className='bg-blue-100 text-blue-600 hover:bg-blue-200'>
+                      <Button asChild variant="outline" className='text-blue-600 bg-blue-100 hover:bg-blue-200 dark:bg-slate-800'>
                         <Link href={`/installations/${installation.id}/tableau`}>
                           <FaTable className="mr-2" /> Voir en détail
                         </Link>

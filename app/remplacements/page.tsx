@@ -99,11 +99,11 @@ const Remplacements = () => {
   return (
     <div className="px-4 pb-12 mx-auto mt-10 max-w-7xl">
       <ToastContainer />
-      <div className="flex flex-col items-center justify-between mb-8 sm:flex-row">
+      <div className="flex flex-col items-center justify-between mb-8 sm:flex-row dark:hover:text-white" >
         <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100 sm:mb-0">Liste des Remplacements</h1>
         <Link 
           href="/remplacements/nouveau" 
-          className="flex items-center gap-2 px-6 py-2 text-gray-800 transition-all duration-300 ease-in-out bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 hover:shadow-md dark:bg-slate-800 dark:text-blue-700 dark:hover:bg-slate-950"
+          className="flex items-center gap-2 px-6 py-2 text-gray-800 transition-all duration-300 ease-in-out bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 hover:shadow-md dark:bg-slate-800 dark:text-blue-700 dark:hover:bg-slate-950 dark:hover:text-white"
         >
           <FaPlus className="text-gray-600 dark:text-blue-700 " /> Nouveau Remplacement
         </Link>

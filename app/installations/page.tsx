@@ -148,7 +148,7 @@ export default function InstallationsPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Liste des Installations</h1>
         <Button asChild className="text-blue-600 bg-blue-100 hover:bg-blue-200">
-          <Link href="/installations/nouvelle" className="flex items-center px-4 py-2 rounded-md dark:bg-slate-800 dark:hover:bg-slate-950">
+          <Link href="/installations/nouvelle" className="flex items-center gap-2 px-6 py-2 duration-300 ease-in-out rounded-md dark:bg-slate-800 dark:hover:bg-slate-950 dark:hover:text-white">
             <FaPlus className="mr-2" />
             Nouvelle Installation
           </Link>

@@ -114,11 +114,11 @@ export default function CreateInstallationLicense() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-12 bg-gray-50 dark:bg-gray-900 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100 mb-8">Créer une nouvelle installation de licence</h1>
-        <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="bg-white dark:bg-gray-800 shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <h1 className="mb-8 text-4xl font-extrabold text-center text-gray-900 dark:text-gray-100">Créer une nouvelle installation de licence</h1>
+        <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="px-8 pt-6 pb-8 mb-4 space-y-6 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
               <label htmlFor="nomPoste" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom du poste</label>
               <input
@@ -128,7 +128,7 @@ export default function CreateInstallationLicense() {
                 value={formData.nomPoste}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
               />
             </div>
             <div>
@@ -140,7 +140,7 @@ export default function CreateInstallationLicense() {
                 value={formData.nomUtilisateur}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
               />
             </div>
             <div>
@@ -151,7 +151,7 @@ export default function CreateInstallationLicense() {
                 name="organisation"
                 value={formData.organisation}
                 readOnly
-                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-gray-300"
+                className="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-600 dark:text-gray-300"
               />
             </div>
             <div>
@@ -163,7 +163,7 @@ export default function CreateInstallationLicense() {
                 value={formData.numeroFacture}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
               />
             </div>
             <div>
@@ -175,17 +175,17 @@ export default function CreateInstallationLicense() {
                 value={formData.dateFacture}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
               />
             </div>
           </div>
 
           <div className="mt-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Licences</h2>
+            <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">Licences</h2>
             {formData.licenses.map((license, index) => (
-              <Card key={index} className="p-6 mb-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Licence {index + 1}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card key={index} className="p-6 mb-4 bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-gray-100">Licence {index + 1}</h3>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <label htmlFor={`license-typeLicense-${index}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300">Type de licence</label>
                     <select
@@ -194,11 +194,15 @@ export default function CreateInstallationLicense() {
                       value={license.typeLicense}
                       onChange={(e) => handleChange(e, index)}
                       required
-                      className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                      className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
                     >
-                      <option value="">Sélectionnez le Type de Licence</option>
+                         <option value="">Sélectionnez le Type de Licence</option>
                       <option value="STARMAG3">STARMAG3</option>
                       <option value="STARGEST">STARGEST</option>
+                      <option value="PREPATAB_WINDOWS">PREPATAB WINDOWS</option>
+                      <option value="PREPATAB_ANDROID">PREPATAB ANDROID</option>
+                      <option value="PREPATAB_RETAIL_ANDROID">PREPATAB RETAIL ANDROID</option>
+                      <option value="STAR_EDI">STAR EDI</option>
                     </select>
                   </div>
                   <div>
@@ -210,7 +214,7 @@ export default function CreateInstallationLicense() {
                       value={license.description}
                       onChange={(e) => handleChange(e, index)}
                       required
-                      className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
+                      className="block w-full px-3 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
                     />
                   </div>
                 </div>
@@ -234,7 +238,7 @@ export default function CreateInstallationLicense() {
             </Button>
           </div>
           <div className="mt-8">
-            <Button type="submit" disabled={loading} className="w-full py-2 px-4">
+            <Button type="submit" disabled={loading} className="w-full px-4 py-2">
               {loading ? 'Création en cours...' : 'Créer l\'installation'}
             </Button>
           </div>

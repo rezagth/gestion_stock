@@ -38,7 +38,9 @@ interface Installation {
   numeroFacture: string;
   dateFacture: string;
   materiels: Materiel[];
+  createdAt: string;
   status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'COMPLETED';
+
 }
 
 export default function TableauInstallation() {
@@ -69,7 +71,6 @@ export default function TableauInstallation() {
   }, [id]);
 
   useEffect(() => {
-
     const fetchReplacementMateriel = async () => {
       if (selectedMateriel && selectedMateriel.status === 'REMPLACE') {
         try {
@@ -181,7 +182,7 @@ export default function TableauInstallation() {
       doc.setFont("helvetica", "normal");
       doc.setTextColor(80, 80, 80);
       doc.text(
-        `Date de livraison: ${format(new Date(), 'dd/MM/yyyy', { locale: fr })}`,
+        `Date de l'installation: ${format(new Date(data?.createdAt), 'dd/MM/yyyy', { locale: fr })}`,
         doc.internal.pageSize.width - 14,
         logoY + 15,
         { align: 'right' }
@@ -380,7 +381,7 @@ export default function TableauInstallation() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Informations principal </CardTitle>
+                <CardTitle>Informations principales </CardTitle>
               </CardHeader>
               <CardContent>
                 <p><strong>Nom:</strong> {data?.nom}</p>
@@ -389,7 +390,7 @@ export default function TableauInstallation() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Informations commercial</CardTitle>
+                <CardTitle>Informations commerciales</CardTitle>
               </CardHeader>
               <CardContent>
                 <p><strong>Client</strong> {data?.client}</p>

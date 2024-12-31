@@ -154,34 +154,36 @@ export default function EditInstallationPage() {
   return (
     <>
       <div className="container mx-auto py-4">
-        <Card className="shadow-md max-w-2xl mx-auto">
+        <Card className="shadow-md max-w-2xl mx-auto dark:bg-slate-800 dark:border-slate-700">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Édition de l'Installation N°{installation.id}</CardTitle>
+            <CardTitle className="text-2xl font-bold heading-primary">Édition de l'Installation N°{installation.id}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold">Nom du poste</h1>
+                <h1 className="text-lg font-semibold heading-secondary">Nom du poste</h1>
                 <Input
                   type="text"
                   id="nomPoste"
                   name="nomPoste"
                   value={installation.nomPoste}
                   onChange={handleInputChange}
+                  className="input"
                 />
               </div>
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold">Nom de l'utilisateur</h1>
+                <h1 className="text-lg font-semibold heading-secondary">Nom de l'utilisateur</h1>
                 <Input
                   type="text"
                   id="nomUtilisateur"
                   name="nomUtilisateur"
                   value={installation.nomUtilisateur}
                   onChange={handleInputChange}
+                  className="input"
                 />
               </div>
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold">Organisation</h1>
+                <h1 className="text-lg font-semibold heading-secondary">Organisation</h1>
                 <Input
                   type="text"
                   id="organisation"
@@ -189,66 +191,95 @@ export default function EditInstallationPage() {
                   value={installation.organisation}
                   onChange={handleInputChange}
                   disabled
-                  className="bg-gray-100 text-black-500"
+                  className="input bg-gray-100 dark:bg-slate-700 dark:text-slate-300"
                 />
               </div>
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold">Numéro de facture</h1>
+                <h1 className="text-lg font-semibold heading-secondary">Numéro de facture</h1>
                 <Input
                   type="text"
                   id="numeroFacture"
                   name="numeroFacture"
                   value={installation.numeroFacture}
                   onChange={handleInputChange}
+                  className="input"
                 />
               </div>
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold">Date de facture</h1>
+                <h1 className="text-lg font-semibold heading-secondary">Date de facture</h1>
                 <Input
                   type="date"
                   id="dateFacture"
                   name="dateFacture"
                   value={installation.dateFacture}
                   onChange={handleInputChange}
+                  className="input"
                 />
               </div>
-              <Button type="submit" className="w-full mt-4">Enregistrer les modifications</Button>
+              <div className="flex justify-end gap-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.back()}
+                  className="btn-secondary"
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={Object.keys(changes).length === 0}
+                >
+                  Enregistrer les modifications
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
-        <ToastContainer />
-      </div>
 
-      {/* Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmer les modifications</DialogTitle>
-            {Object.keys(changes).length > 0 ? (
-              <>
-                <DialogDescription>Voici les modifications que vous avez effectuées :</DialogDescription>
-                <ul className="mt-4 space-y-2">
-                  {Object.entries(changes).map(([key, value]) => (
-                    <li key={key} className="text-sm text-gray-700">
-                      <strong>{key}:</strong> {value}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <DialogDescription>Aucune modification détectée.</DialogDescription>
-            )}
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Annuler
-            </Button>
-            {Object.keys(changes).length > 0 && (
-              <Button onClick={confirmUpdate}>Confirmer</Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="dialog-content">
+            <DialogHeader>
+              <DialogTitle className="heading-primary">Confirmer les modifications</DialogTitle>
+              <DialogDescription className="text-muted">
+                Voulez-vous vraiment appliquer ces modifications ?");
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              {Object.entries(changes).map(([field, value]) => (
+                <div key={field} className="card-section card-section-secondary">
+                  <p className="text-sm font-medium heading-secondary">{field}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-sm status-badge">
+                      {originalInstallation?.[field as keyof Installation]}
+                    </span>
+                    <span className="text-muted">→</span>
+                    <span className="text-sm status-badge status-success">
+                      {value}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <DialogFooter className="flex justify-end gap-3 mt-4">
+              <Button
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+                className="btn-secondary"
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={confirmUpdate}
+                className="btn-primary"
+              >
+                Confirmer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <ToastContainer theme="dark" />
     </>
   );
 }

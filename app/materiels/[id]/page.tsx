@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Skeleton } from "@/components/ui/skeleton";
+import { CustomSkeleton } from "@/components/ui/custom-skeleton";
 
 type MaterielWithDetails = Materiel & {
   installation: Installation;
@@ -60,13 +60,13 @@ const MaterielDetail: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto my-12 px-4">
       <Link href="/suivi" className="inline-block mb-6">
-        <Button variant="outline" className="flex items-center text-blue-600 hover:bg-blue-50 transition-colors">
+        <Button variant="outline" className="flex items-center text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
           <FaArrowLeft className="mr-2" /> Retour à la liste
         </Button>
       </Link>
 
-      <Card className="shadow-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white">
-        <div className="px-6 py-8 bg-blue-600 text-white">
+      <Card className="shadow-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900">
+        <div className="px-6 py-8 bg-blue-600 dark:bg-blue-800 text-white">
           <h1 className="text-4xl font-bold">{materiel.typeMateriel}</h1>
           <p className="mt-2 text-blue-200">Détails du matériel</p>
         </div>
@@ -98,7 +98,7 @@ const MaterielDetail: React.FC = () => {
           </Section>
 
           {materiel.status === 'REMPLACE' && materiel.materielRemplace && (
-            <Section title="Matériel Remplacé" icon={<FaExclamationTriangle className="text-yellow-500" />}>
+            <Section title="Matériel Remplacé" icon={<FaExclamationTriangle className="text-yellow-500 dark:text-yellow-400" />}>
               <InfoGrid>
                 <InfoItem label="Matériel remplacé par" value={materiel.materielRemplace.typeMateriel} />
                 <InfoItem label="Marque" value={materiel.materielRemplace.marque} />
@@ -117,9 +117,9 @@ const MaterielDetail: React.FC = () => {
 };
 
 const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.ReactNode }> = ({ title, icon, children }) => (
-  <section className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-    <h2 className="text-2xl font-semibold mb-6 flex items-center text-blue-700">
-      <span className="mr-3 text-blue-500">{icon}</span>
+  <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h2 className="text-2xl font-semibold mb-6 flex items-center text-blue-700 dark:text-blue-400">
+      <span className="mr-3 text-blue-500 dark:text-blue-400">{icon}</span>
       {title}
     </h2>
     {children}
@@ -133,28 +133,28 @@ const InfoGrid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const InfoItem: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="bg-gray-50 p-3 rounded-md">
-    <span className="font-medium text-gray-600">{label}:</span>
-    <span className="ml-2 text-gray-800">{value}</span>
+  <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
+    <span className="font-medium text-gray-600 dark:text-gray-300">{label}:</span>
+    <span className="ml-2 text-gray-800 dark:text-gray-200">{value}</span>
   </div>
 );
 
 const LoadingSkeleton: React.FC = () => (
   <div className="max-w-4xl mx-auto my-12 px-4">
-    <Skeleton className="w-32 h-10 mb-6" />
-    <Card className="shadow-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white">
-      <div className="px-6 py-8 bg-blue-600">
-        <Skeleton className="w-3/4 h-10 mb-2" />
-        <Skeleton className="w-1/2 h-6" />
+    <CustomSkeleton className="w-32 h-10 mb-6" />
+    <Card className="shadow-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900">
+      <div className="px-6 py-8 bg-blue-600 dark:bg-blue-800">
+        <CustomSkeleton className="w-3/4 h-10 mb-2" />
+        <CustomSkeleton className="w-1/2 h-6" />
       </div>
       <div className="p-8 space-y-10">
         {[...Array(3)].map((_, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-            <Skeleton className="w-1/3 h-8 mb-6" />
+          <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <CustomSkeleton className="w-1/3 h-8 mb-6" />
             <div className="grid grid-cols-2 gap-6">
               {[...Array(4)].map((_, itemIndex) => (
-                <div key={itemIndex} className="bg-gray-50 p-3 rounded-md">
-                  <Skeleton className="w-full h-6" />
+                <div key={itemIndex} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
+                  <CustomSkeleton className="w-full h-6" />
                 </div>
               ))}
             </div>

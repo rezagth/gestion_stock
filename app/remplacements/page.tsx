@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"; // Importation du composant Card de
 import { Input } from "@/components/ui/input"; // Importation du composant Input de Shadcn
 import { ToastContainer, toast } from 'react-toastify'; // Importation de Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Styles de Toastify
+import { CustomSkeleton } from "@/components/ui/custom-skeleton";
 
 interface Remplacement {
   id: string;
@@ -39,7 +40,7 @@ const Remplacements = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   useEffect(() => {
     fetchRemplacements();
   }, []);
@@ -77,11 +78,11 @@ const Remplacements = () => {
     <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
       <div className="grid grid-cols-1 gap-8">
         {[...Array(3)].map((_, index) => (
-          <Card key={index} className="p-6 bg-white border rounded-lg shadow-lg">
-            <div className="h-6 mb-4 bg-gray-200 animate-pulse" />
-            <div className="h-4 mb-2 bg-gray-200 animate-pulse" />
-            <div className="h-4 mb-2 bg-gray-200 animate-pulse" />
-            <div className="h-4 mb-2 bg-gray-200 animate-pulse" />
+          <Card key={index} className="p-6 bg-white dark:bg-gray-800 border rounded-lg shadow-lg">
+            <CustomSkeleton className="h-6 mb-4" />
+            <CustomSkeleton className="h-4 mb-2" />
+            <CustomSkeleton className="h-4 mb-2" />
+            <CustomSkeleton className="h-4 mb-2" />
           </Card>
         ))}
       </div>
@@ -96,12 +97,12 @@ const Remplacements = () => {
     <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
       <ToastContainer />
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Liste des Remplacements</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-0">Liste des Remplacements</h1>
         <Link 
           href="/remplacements/nouveau" 
-          className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-300 shadow-md text-center w-full sm:w-auto flex items-center"
+          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-lg transition-all duration-300 ease-in-out shadow-sm hover:shadow-md flex items-center gap-2"
         >
-          <FaPlus className="inline mr-2" /> Nouveau Remplacement
+          <FaPlus className="text-gray-600" /> Nouveau Remplacement
         </Link>
       </div>
 
@@ -120,7 +121,7 @@ const Remplacements = () => {
       ) : (
         <div className="grid grid-cols-1 gap-y-8">
           {filteredAndSortedRemplacements.map((remplacement) => (
-            <Card key={remplacement.id} className={`p-6 border-l-4 rounded-lg shadow-lg transition duration-300 hover:bg-gray-100 hover:border-blue-600`}>
+            <Card key={remplacement.id} className="p-6 border-l-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out hover:bg-gray-50 dark:hover:bg-slate-800/50">
               {/* Affichage des informations de l'installation */}
               <div className="mb-4">
                 <h3 className="text-lg font-semibold text-blue-600">Installation</h3>
@@ -132,7 +133,7 @@ const Remplacements = () => {
               {/* Affichage des informations sur les matériels */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
                 {/* Ancien Matériel */}
-                <div className="bg-red-50 p-4 rounded-lg shadow-md">
+                <div className="bg-red-50/50 dark:bg-red-900/10 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out">
                   <h3 className="font-semibold text-red-600 flex items-center">
                     <FaTools className="mr-2" /> Ancien Matériel
                   </h3>
@@ -148,7 +149,7 @@ const Remplacements = () => {
                 </div>
 
                 {/* Nouveau Matériel */}
-                <div className="bg-green-50 p-4 rounded-lg shadow-md">
+                <div className="bg-green-50/50 dark:bg-green-900/10 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out">
                   <h3 className="font-semibold text-green-600 flex items-center">
                     <FaBoxOpen className="mr-2" /> Nouveau Matériel
                   </h3>

@@ -210,31 +210,31 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-800">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Gestion d'installation
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Plateforme centralisée pour la gestion des installations matériel et licences AMV
           </p>
         </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-12">
-          <Link href="/installations/">
+          <Link href="/installations/" className="w-full">
             <Button 
-              className="w-full h-16 text-lg gap-3 bg-blue-600 hover:bg-blue-700"
+              className="w-full h-16 text-lg gap-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200"
             >
               <Box className="w-6 h-6" />
               Liste des installations matériels
             </Button>
           </Link>
-          <Link href="/licenses/">
+          <Link href="/licenses/" className="w-full">
             <Button 
-              className="w-full h-16 text-lg gap-3 bg-green-600 hover:bg-green-700"
+              className="w-full h-16 text-lg gap-3 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition-colors duration-200"
             >
               <Box className="w-6 h-6" />
               Liste des installations licences
@@ -245,13 +245,13 @@ export default function HomePage() {
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {features.map((feature, index) => (
-            <Card key={index} className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <Card key={index} className="border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md dark:bg-slate-800 dark:hover:bg-slate-700/50 transition-all duration-200">
               <CardContent className="pt-6">
-                <div className="rounded-full w-16 h-16 flex items-center justify-center bg-gray-50 mb-4">
+                <div className="rounded-full w-16 h-16 flex items-center justify-center bg-gray-50 dark:bg-slate-700 mb-4">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-lg font-semibold mb-2 dark:text-white">{feature.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -260,30 +260,30 @@ export default function HomePage() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Matériel Statistics */}
-          <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md dark:bg-slate-800 dark:hover:bg-slate-700/50 transition-all duration-200">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Monitor className="w-5 h-5 text-blue-500" />
+              <CardTitle className="flex items-center gap-2 dark:text-white">
+                <Monitor className="w-5 h-5 text-blue-500 dark:text-blue-400" />
                 Statistiques Matériel
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total installations</span>
-                  <Badge variant="secondary" className="text-blue-600 bg-blue-50">
+                  <span className="text-gray-600 dark:text-gray-300">Total installations</span>
+                  <Badge variant="secondary" className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">
                     {totals.installations.materiel}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total matériels</span>
-                  <Badge variant="secondary" className="text-purple-600 bg-purple-50">
+                  <span className="text-gray-600 dark:text-gray-300">Total matériels</span>
+                  <Badge variant="secondary" className="text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30">
                     {totals.materiels}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total remplacements</span>
-                  <Badge variant="secondary" className="text-orange-600 bg-orange-50">
+                  <span className="text-gray-600 dark:text-gray-300">Total remplacements</span>
+                  <Badge variant="secondary" className="text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30">
                     {totals.remplacements.materiel}
                   </Badge>
                 </div>
@@ -292,63 +292,31 @@ export default function HomePage() {
           </Card>
 
           {/* Licenses Statistics */}
-          <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md dark:bg-slate-800 dark:hover:bg-slate-700/50 transition-all duration-200">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Key className="w-5 h-5 text-green-500" />
+              <CardTitle className="flex items-center gap-2 dark:text-white">
+                <Key className="w-5 h-5 text-green-500 dark:text-green-400" />
                 Statistiques Licences AMV
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total installations</span>
-                  <Badge variant="secondary" className="text-blue-600 bg-blue-50">
+                  <span className="text-gray-600 dark:text-gray-300">Total installations</span>
+                  <Badge variant="secondary" className="text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30">
                     {totals.installations.license}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total licences</span>
-                  <Badge variant="secondary" className="text-green-600 bg-green-50">
+                  <span className="text-gray-600 dark:text-gray-300">Total licences</span>
+                  <Badge variant="secondary" className="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30">
                     {totals.licenses}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total remplacements</span>
-                  <Badge variant="secondary" className="text-orange-600 bg-orange-50">
+                  <span className="text-gray-600 dark:text-gray-300">Total remplacements</span>
+                  <Badge variant="secondary" className="text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30">
                     {totals.remplacements.license}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Total Statistics */}
-          <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-gray-500" />
-                Statistiques Globales
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">Total Installations</span>
-                  <Badge variant="secondary" className="text-blue-600 bg-blue-50">
-                    {totals.installations.total}
-                  </Badge>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">Total Remplacements</span>
-                  <Badge variant="secondary" className="text-orange-600 bg-orange-50">
-                    {totals.remplacements.total}
-                  </Badge>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">Total Équipements</span>
-                  <Badge variant="secondary" className="text-purple-600 bg-purple-50">
-                    {totals.materiels + totals.licenses}
                   </Badge>
                 </div>
               </div>

@@ -204,26 +204,26 @@ function RemplacementContent() {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="mb-6">
+    <div className="max-w-7xl mx-auto mt-10 px-4 pb-12">
+      <div className="mb-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white heading-primary">
             Remplacement de Licence
           </h1>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto space-y-6">
-        <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="card-hover">
           <CardHeader className="pb-2">
-            <CardTitle>Sélection de la licence</CardTitle>
+            <CardTitle className="heading-secondary">Sélection de la licence</CardTitle>
           </CardHeader>
           <CardContent>
             <Select
               value={selectedLicense}
               onValueChange={setSelectedLicense}
             >
-              <SelectTrigger className="w-full bg-white border-gray-200">
+              <SelectTrigger className="input">
                 <SelectValue placeholder="Sélectionner une licence à remplacer" />
               </SelectTrigger>
               <SelectContent>
@@ -231,7 +231,7 @@ function RemplacementContent() {
                   <SelectItem key={license.id} value={license.id}>
                     {license.typeLicense} - {license.installation.nomPoste} 
                     {license.status !== 'INSTALLEE' && (
-                      <Badge variant="secondary" className="ml-2">
+                      <Badge className="status-badge status-info ml-2">
                         {getStatusText(license.status)}
                       </Badge>
                     )}
@@ -244,14 +244,14 @@ function RemplacementContent() {
 
         {selectedLicenseInfo && (
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <Card className="card-hover">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2">
-                  <Badge className="bg-blue-500 hover:bg-blue-600">
+                  <Badge className="status-badge status-active">
                     {selectedLicenseInfo.typeLicense}
                   </Badge>
-                  <span className="text-gray-500">•</span>
-                  <Badge variant="outline" className="bg-white">
+                  <span className="text-muted">•</span>
+                  <Badge className="status-badge status-info">
                     {selectedLicenseInfo.installation.organisation}
                   </Badge>
                 </CardTitle>
@@ -259,26 +259,26 @@ function RemplacementContent() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                      <p className="font-medium text-gray-700 mb-2">Configuration Actuelle</p>
+                    <div className="card-section card-section-secondary">
+                      <p className="font-medium text-gray-800 dark:text-gray-100 mb-2">Configuration Actuelle</p>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-600">Poste:</span>
-                          <span className="font-medium bg-white px-2 py-1 rounded">
+                          <span className="text-gray-600 dark:text-gray-400">Poste:</span>
+                          <span className="font-medium text-gray-900 dark:text-white">
                             {selectedLicenseInfo.installation.nomPoste}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-600">Utilisateur:</span>
-                          <span className="font-medium bg-white px-2 py-1 rounded">
+                          <span className="text-gray-600 dark:text-gray-400">Utilisateur:</span>
+                          <span className="font-medium text-gray-900 dark:text-white">
                             {selectedLicenseInfo.installation.nomUtilisateur}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                      <p className="font-medium text-gray-700 mb-2">Modifications</p>
+                    <div className="card-section card-section-secondary">
+                      <p className="font-medium text-gray-800 dark:text-gray-100 mb-2">Modifications</p>
                       <div className="space-y-4">
                         <div>
                           <div className="flex items-center space-x-2 mb-2">
@@ -287,7 +287,7 @@ function RemplacementContent() {
                               checked={changePoste}
                               onCheckedChange={(checked) => setChangePoste(checked as boolean)}
                             />
-                            <label htmlFor="changePoste" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="changePoste" className="text-sm font-medium text-gray-800 dark:text-gray-200">
                               Changer le poste
                             </label>
                           </div>
@@ -296,7 +296,7 @@ function RemplacementContent() {
                               placeholder="Nouveau nom de poste"
                               value={nouveauNomPoste}
                               onChange={(e) => setNouveauNomPoste(e.target.value)}
-                              className="bg-white"
+                              className="input"
                             />
                           )}
                         </div>
@@ -308,7 +308,7 @@ function RemplacementContent() {
                               checked={changeUtilisateur}
                               onCheckedChange={(checked) => setChangeUtilisateur(checked as boolean)}
                             />
-                            <label htmlFor="changeUtilisateur" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="changeUtilisateur" className="text-sm font-medium text-gray-800 dark:text-gray-200">
                               Changer l'utilisateur
                             </label>
                           </div>
@@ -317,7 +317,7 @@ function RemplacementContent() {
                               placeholder="Nouveau nom d'utilisateur"
                               value={nouveauNomUtilisateur}
                               onChange={(e) => setNouveauNomUtilisateur(e.target.value)}
-                              className="bg-white"
+                              className="input"
                             />
                           )}
                         </div>
@@ -326,25 +326,25 @@ function RemplacementContent() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                      <p className="font-medium text-gray-700 mb-2">Informations Facture</p>
+                    <div className="card-section card-section-secondary">
+                      <p className="font-medium text-gray-800 dark:text-gray-100 mb-2">Informations Facture</p>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2">
-                          <span className="text-gray-600">N° Facture:</span>
-                          <span className="font-medium bg-white px-2 py-1 rounded">
+                          <span className="text-gray-600 dark:text-gray-400">N° Facture:</span>
+                          <span className="font-medium text-gray-900 dark:text-white">
                             {selectedLicenseInfo.installation.numeroFacture}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                      <p className="font-medium text-gray-700 mb-2">Motif du remplacement</p>
+                    <div className="card-section card-section-secondary">
+                      <p className="font-medium text-gray-800 dark:text-gray-100 mb-2">Motif du remplacement</p>
                       <Textarea
                         placeholder="Décrivez la raison du remplacement..."
                         value={motif}
                         onChange={(e) => setMotif(e.target.value)}
-                        className="bg-white resize-none h-[120px]"
+                        className="input resize-none h-[120px]"
                       />
                     </div>
                   </div>
@@ -353,11 +353,11 @@ function RemplacementContent() {
             </Card>
 
             {remplacementHistory.length > 0 && (
-              <Card className="border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <Card className="card-hover">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2">
                     Historique des remplacements
-                    <Badge variant="secondary" className="ml-2">
+                    <Badge className="status-badge status-info ml-2">
                       {remplacementHistory.length}
                     </Badge>
                   </CardTitle>
@@ -368,10 +368,10 @@ function RemplacementContent() {
                       {remplacementHistory.map((remplacement, index) => (
                         <div 
                           key={index} 
-                          className="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors"
+                          className="card-section card-section-secondary"
                         >
                           <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline" className="bg-white">
+                            <Badge className="status-badge">
                               {new Date(remplacement.dateRemplacement).toLocaleDateString('fr-FR', {
                                 day: 'numeric',
                                 month: 'long',
@@ -384,13 +384,13 @@ function RemplacementContent() {
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             {remplacement.ancienNomPoste !== remplacement.nouveauNomPoste && (
                               <div>
-                                <p className="text-gray-600 mb-1">Changement de poste:</p>
+                                <p className="text-gray-600 dark:text-gray-400 mb-1">Changement de poste:</p>
                                 <div className="flex items-center gap-2">
-                                  <span className="bg-white px-2 py-1 rounded">
+                                  <span className="text-gray-800 dark:text-gray-200">
                                     {remplacement.ancienNomPoste}
                                   </span>
-                                  <ArrowRight className="w-4 h-4 text-gray-400" />
-                                  <span className="bg-green-50 text-green-700 px-2 py-1 rounded">
+                                  <ArrowRight className="text-gray-500 dark:text-gray-400" />
+                                  <span className="text-green-600 dark:text-green-400">
                                     {remplacement.nouveauNomPoste}
                                   </span>
                                 </div>
@@ -398,13 +398,13 @@ function RemplacementContent() {
                             )}
                             {remplacement.ancienNomUtilisateur !== remplacement.nouveauNomUtilisateur && (
                               <div>
-                                <p className="text-gray-600 mb-1">Changement d'utilisateur:</p>
+                                <p className="text-gray-600 dark:text-gray-400 mb-1">Changement d'utilisateur:</p>
                                 <div className="flex items-center gap-2">
-                                  <span className="bg-white px-2 py-1 rounded">
+                                  <span className="text-gray-800 dark:text-gray-200">
                                     {remplacement.ancienNomUtilisateur}
                                   </span>
-                                  <ArrowRight className="w-4 h-4 text-gray-400" />
-                                  <span className="bg-green-50 text-green-700 px-2 py-1 rounded">
+                                  <ArrowRight className="text-gray-500 dark:text-gray-400" />
+                                  <span className="text-green-600 dark:text-green-400">
                                     {remplacement.nouveauNomUtilisateur}
                                   </span>
                                 </div>
@@ -412,9 +412,9 @@ function RemplacementContent() {
                             )}
                           </div>
                           {remplacement.motif && (
-                            <div className="mt-2 text-sm text-gray-600">
-                              <p className="font-medium text-gray-700">Motif:</p>
-                              <p className="mt-1 bg-white p-2 rounded">
+                            <div className="mt-2 text-sm">
+                              <p className="font-medium text-gray-800 dark:text-gray-100">Motif:</p>
+                              <p className="mt-1 text-gray-800 dark:text-gray-200">
                                 {remplacement.motif}
                               </p>
                             </div>
@@ -429,7 +429,7 @@ function RemplacementContent() {
 
             <Button
               type="submit"
-              className={`w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-all duration-300 ${
+              className={`btn-primary w-full ${
                 loading || !selectedLicense || (!changePoste && !changeUtilisateur)
                   ? 'opacity-50 cursor-not-allowed'
                   : ''
@@ -452,31 +452,31 @@ function RemplacementContent() {
         )}
 
         <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="dialog-content">
             <DialogHeader>
-              <DialogTitle>Confirmer le remplacement</DialogTitle>
+              <DialogTitle className="heading-primary">Confirmer le remplacement</DialogTitle>
               <DialogDescription>
                 <div className="mt-4 space-y-4">
                   {changePoste && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm font-medium text-gray-700">Nouveau poste</p>
-                      <p className="mt-1 text-sm bg-white px-2 py-1 rounded">
+                    <div className="card-section card-section-secondary">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100">Nouveau poste</p>
+                      <p className="mt-1 text-sm text-gray-900 dark:text-white">
                         {nouveauNomPoste}
                       </p>
                     </div>
                   )}
                   {changeUtilisateur && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm font-medium text-gray-700">Nouvel utilisateur</p>
-                      <p className="mt-1 text-sm bg-white px-2 py-1 rounded">
+                    <div className="card-section card-section-secondary">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100">Nouvel utilisateur</p>
+                      <p className="mt-1 text-sm text-gray-900 dark:text-white">
                         {nouveauNomUtilisateur}
                       </p>
                     </div>
                   )}
                   {motif && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm font-medium text-gray-700">Motif du remplacement</p>
-                      <p className="mt-1 text-sm bg-white px-2 py-1 rounded">
+                    <div className="card-section card-section-secondary">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100">Motif du remplacement</p>
+                      <p className="mt-1 text-sm text-gray-900 dark:text-white">
                         {motif}
                       </p>
                     </div>
@@ -488,13 +488,14 @@ function RemplacementContent() {
               <Button
                 variant="outline"
                 onClick={() => setIsConfirmDialogOpen(false)}
+                className="btn-secondary"
                 disabled={loading}
               >
                 Annuler
               </Button>
               <Button
                 onClick={confirmReplacement}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="btn-primary"
                 disabled={loading}
               >
                 {loading ? (

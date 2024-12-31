@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button"; // Importation du composant Button
 import { ToastContainer, toast } from 'react-toastify'; // Importation de Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Styles de Toastify
+import { FaSpinner } from 'react-icons/fa'; // Importation de l'icône de chargement
 
 type Materiel = {
   id: string;
@@ -18,6 +19,7 @@ type Materiel = {
 type Installation = {
   id: string;
   nom: string;
+  client: string;
 }
 
 function getCurrentDateFR() {
@@ -138,22 +140,29 @@ export default function RemplacementPage() {
 
   return (
     <div className="container mx-auto p-4 max-w-2xl">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Nouveau Remplacement</h1>
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">Nouveau Remplacement</h1>
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-slate-800 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+        <ToastContainer theme="dark" />
         
         <div>
-          <label htmlFor="installation" className="block text-sm font-medium text-gray-700">Installation</label>
+          <label htmlFor="installation" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Installation
+          </label>
           <select
             id="installation"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             value={selectedInstallation || ''}
             onChange={(e) => setSelectedInstallation(e.target.value)}
-            onKeyDown={handleKeyDown} // Empêche "Entrée"
+            onKeyDown={handleKeyDown}
           >
-            <option value="">Sélectionner une installation</option>
+            <option value="" className="dark:bg-slate-900">Sélectionner une installation</option>
             {installations.map((installation) => (
-              <option key={installation.id} value={installation.id}>
-                {installation.nom}
+              <option 
+                key={installation.id} 
+                value={installation.id}
+                className="dark:bg-slate-900"
+              >
+                {installation.nom} - {installation.client}
               </option>
             ))}
           </select>
@@ -161,102 +170,140 @@ export default function RemplacementPage() {
 
         {selectedInstallation && (
           <div>
-            <label htmlFor="ancienMateriel" className="block text-sm font-medium text-gray-700">Matériel à remplacer</label>
+            <label htmlFor="ancienMateriel" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Matériel à remplacer
+            </label>
             <select
               id="ancienMateriel"
               name="ancienMateriel"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               required
-              onKeyDown={handleKeyDown} // Empêche "Entrée"
+              onKeyDown={handleKeyDown}
             >
-              <option value="">Sélectionner un matériel</option>
+              <option value="" className="dark:bg-slate-900">Sélectionner un matériel</option>
               {materiels.length > 0 ? (
                 materiels.map((materiel) => (
-                  <option key={materiel.id} value={materiel.id}>
-                    {materiel.marque} {materiel.modele} ({materiel.numeroSerie})
+                  <option 
+                    key={materiel.id} 
+                    value={materiel.id}
+                    className="dark:bg-slate-900"
+                  >
+                    {materiel.marque} {materiel.modele} - {materiel.numeroSerie}
                   </option>
                 ))
               ) : (
-                <option value="">Aucun matériel disponible pour cette installation</option>
+                <option value="" disabled className="dark:bg-slate-900">Aucun matériel disponible</option>
               )}
             </select>
           </div>
         )}
 
-        {/* Nouveau matériel */}
-        <div className="mt-4">
-          <label htmlFor="marque" className="block text-sm font-medium text-gray-700">Marque du matériel</label>
-          <input
-            id="marque"
-            type="text"
-            value={nouveauMateriel.marque}
-            onChange={(e) => handleNouveauMaterielChange('marque', e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            required
-            onKeyDown={handleKeyDown} // Empêche "Entrée"
-          />
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="marque" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Marque du matériel
+            </label>
+            <input
+              id="marque"
+              type="text"
+              value={nouveauMateriel.marque}
+              onChange={(e) => handleNouveauMaterielChange('marque', e.target.value)}
+              className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              required
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="modele" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Modèle du matériel
+            </label>
+            <input
+              id="modele"
+              type="text"
+              value={nouveauMateriel.modele}
+              onChange={(e) => handleNouveauMaterielChange('modele', e.target.value)}
+              className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              required
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="numeroSerie" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Numéro de série
+            </label>
+            <input
+              id="numeroSerie"
+              type="text"
+              value={nouveauMateriel.numeroSerie}
+              onChange={(e) => handleNouveauMaterielChange('numeroSerie', e.target.value)}
+              className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              required
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="typeMateriel" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Type de matériel
+            </label>
+            <input
+              id="typeMateriel"
+              type="text"
+              value={nouveauMateriel.typeMateriel}
+              onChange={(e) => handleNouveauMaterielChange('typeMateriel', e.target.value)}
+              className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              required
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="dateInstallation" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Date d'installation
+            </label>
+            <input
+              id="dateInstallation"
+              type="date"
+              value={nouveauMateriel.dateInstallation}
+              onChange={(e) => handleNouveauMaterielChange('dateInstallation', e.target.value)}
+              className="mt-1 block w-full p-2 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              required
+              onKeyDown={handleKeyDown}
+            />
+          </div>
         </div>
 
-        <div className="mt-4">
-          <label htmlFor="modele" className="block text-sm font-medium text-gray-700">Modèle du matériel</label>
-          <input
-            id="modele"
-            type="text"
-            value={nouveauMateriel.modele}
-            onChange={(e) => handleNouveauMaterielChange('modele', e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            required
-            onKeyDown={handleKeyDown} // Empêche "Entrée"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label htmlFor="numeroSerie" className="block text-sm font-medium text-gray-700">Numéro de série</label>
-          <input
-            id="numeroSerie"
-            type="text"
-            value={nouveauMateriel.numeroSerie}
-            onChange={(e) => handleNouveauMaterielChange('numeroSerie', e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            required
-            onKeyDown={handleKeyDown} // Empêche "Entrée"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label htmlFor="typeMateriel" className="block text-sm font-medium text-gray-700">Type de matériel</label>
-          <input
-            id="typeMateriel"
-            type="text"
-            value={nouveauMateriel.typeMateriel}
-            onChange={(e) => handleNouveauMaterielChange('typeMateriel', e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            required
-            onKeyDown={handleKeyDown} // Empêche "Entrée"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label htmlFor="dateInstallation" className="block text-sm font-medium text-gray-700">Date d'installation</label>
-          <input
-            id="dateInstallation"
-            type="date"
-            value={nouveauMateriel.dateInstallation}
-            onChange={(e) => handleNouveauMaterielChange('dateInstallation', e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            onKeyDown={handleKeyDown} // Empêche "Entrée"
-          />
-        </div>
-
-        <div className="mt-6 flex justify-center">
+        <div className="flex justify-end space-x-4">
+          <Button
+            type="button"
+            onClick={() => router.push('/remplacements')}
+            className="px-4 py-2 bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-lg transition-colors"
+          >
+            Annuler
+          </Button>
           <Button
             type="submit"
-            className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded"
+            className="px-4 py-2 bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg transition-colors"
             disabled={isLoading}
           >
-            {isLoading ? 'En cours...' : 'Effectuer le remplacement'}
+            {isLoading ? (
+              <div className="flex items-center">
+                <FaSpinner className="animate-spin mr-2" />
+                Création...
+              </div>
+            ) : (
+              'Créer le remplacement'
+            )}
           </Button>
         </div>
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg">
+            {error}
+          </div>
+        )}
       </form>
 
       <ToastContainer />

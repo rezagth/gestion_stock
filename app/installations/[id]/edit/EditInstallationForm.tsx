@@ -139,19 +139,19 @@ export default function EditInstallationForm({ installation }: EditInstallationF
     }
   };
 
-  const sectionClass = "bg-white shadow-lg rounded-xl p-8 mb-8 space-y-8";
-  const labelClass = "block text-sm font-medium text-gray-700 mb-2";
-  const errorClass = "mt-2 text-sm text-red-600";
+  const sectionClass = "bg-white dark:bg-slate-800 shadow-lg rounded-xl p-8 mb-8 space-y-8";
+  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2";
+  const errorClass = "mt-2 text-sm text-red-600 dark:text-red-400";
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-12">
       <div className={sectionClass}>
-        <h2 className="text-3xl font-semibold mb-6 text-gray-800">Informations de l'installation</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-100">Informations de l'installation</h2>
         {['nom', 'client', 'boutique', 'organisation'].map(field => (
           <div key={field} className="mb-6">
             <label htmlFor={field} className={labelClass}>{capitalizeFirstLetter(field)}</label>
             {isSubmitting ? (
-              <Skeleton className="w-full h-10" />
+              <Skeleton className="w-full h-10 dark:bg-slate-700" />
             ) : (
               <Input
                 type="text"
@@ -160,6 +160,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                 value={formData[field]}
                 onChange={handleChange}
                 aria-describedby={`${field}-error`}
+                className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
               />
             )}
             {errors[field] && <p id={`${field}-error`} className={errorClass}>{errors[field]}</p>}
@@ -168,12 +169,12 @@ export default function EditInstallationForm({ installation }: EditInstallationF
       </div>
 
       <div className={sectionClass}>
-        <h2 className="text-3xl font-semibold mb-6 text-gray-800">Informations de facturation</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-100">Informations de facturation</h2>
         {['numeroFacture'].map(field => (
           <div key={field} className="mb-6">
             <label htmlFor={field} className={labelClass}>{capitalizeFirstLetter(field)}</label>
             {isSubmitting ? (
-              <Skeleton className="w-full h-10" />
+              <Skeleton className="w-full h-10 dark:bg-slate-700" />
             ) : (
               <Input
                 type="text"
@@ -181,6 +182,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                 name={field}
                 value={formData[field] || ''}
                 onChange={handleChange}
+                className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
               />
             )}
           </div>
@@ -188,7 +190,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
         <div className="mb-6">
           <label htmlFor="dateFacture" className={labelClass}>Date de facture</label>
           {isSubmitting ? (
-            <Skeleton className="w-full h-10" />
+            <Skeleton className="w-full h-10 dark:bg-slate-700" />
           ) : (
             <Input
               type="date"
@@ -196,21 +198,22 @@ export default function EditInstallationForm({ installation }: EditInstallationF
               name="dateFacture"
               value={formData.dateFacture ? new Date(formData.dateFacture).toISOString().split('T')[0] : ''}
               onChange={handleChange}
+              className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
             />
           )}
         </div>
         <div className="mb-6">
           <label htmlFor="status" className={labelClass}>Statut</label>
           {isSubmitting ? (
-            <Skeleton className="w-full h-10" />
+            <Skeleton className="w-full h-10 dark:bg-slate-700" />
           ) : (
             <Select onValueChange={(value) => handleChange({ target: { name: 'status', value } } as any)}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700">
                 <SelectValue placeholder="Sélectionnez un statut" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Inactive</SelectItem>
+              <SelectContent className="dark:bg-slate-800">
+                <SelectItem value="ACTIVE" className="dark:text-gray-100">Active</SelectItem>
+                <SelectItem value="INACTIVE" className="dark:text-gray-100">Inactive</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -218,14 +221,14 @@ export default function EditInstallationForm({ installation }: EditInstallationF
       </div>
 
       <div className={sectionClass}>
-        <h2 className="text-3xl font-semibold mb-6 text-gray-800">Matériels</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-100">Matériels</h2>
         {formData.materiels.map((materiel, index) => (
-          <div key={materiel.id} className="border border-gray-200 p-6 mb-6 rounded-lg shadow-lg">
+          <div key={materiel.id} className="border border-gray-200 dark:border-slate-700 p-6 mb-6 rounded-lg bg-white dark:bg-slate-900 shadow-lg">
             {['marque', 'modele', 'numeroSerie', 'typeMateriel'].map(field => (
               <div key={field} className="mb-6">
                 <label htmlFor={`${field}-${index}`} className={labelClass}>{capitalizeFirstLetter(field)}</label>
                 {isSubmitting ? (
-                  <Skeleton className="w-full h-10" />
+                  <Skeleton className="w-full h-10 dark:bg-slate-700" />
                 ) : (
                   <Input
                     type="text"
@@ -233,11 +236,11 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                     name={field}
                     value={materiel[field]}
                     onChange={(e) => handleMaterielChange(index, e)}
-                    aria-describedby={`materiel_${index}_${field}-error`}
+                    className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
                   />
                 )}
                 {errors[`materiel_${index}_${field}`] && (
-                  <p id={`materiel_${index}_${field}-error`} className={errorClass}>
+                  <p className={errorClass}>
                     {errors[`materiel_${index}_${field}`]}
                   </p>
                 )}
@@ -246,7 +249,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
             <div className="mb-6">
               <label htmlFor={`dateInstallation-${index}`} className={labelClass}>Date Installation</label>
               {isSubmitting ? (
-                <Skeleton className="w-full h-10" />
+                <Skeleton className="w-full h-10 dark:bg-slate-700" />
               ) : (
                 <Input
                   type="date"
@@ -254,48 +257,85 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                   name="dateInstallation"
                   value={materiel.dateInstallation ? new Date(materiel.dateInstallation).toISOString().split('T')[0] : ''}
                   onChange={(e) => handleMaterielChange(index, e)}
+                  className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
                 />
               )}
             </div>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="destructive" onClick={() => {
-                  setMaterielToDelete(index);
-                  setDialogOpen(true);
-                }}>
-                  Supprimer le matériel
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Confirmer la suppression</DialogTitle>
-                  <DialogDescription>
-                    Êtes-vous sûr de vouloir supprimer ce matériel ? Cette action est irréversible.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setDialogOpen(false)}>Annuler</Button>
-                  <Button variant="destructive" onClick={() => {
-                    if (materielToDelete !== null) {
-                      removeMateriel(materielToDelete);
-                      setDialogOpen(false);
-                    }
-                  }}>Supprimer</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setMaterielToDelete(index);
+                setDialogOpen(true);
+              }}
+              className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white"
+            >
+              Supprimer le matériel
+            </Button>
           </div>
         ))}
-        <Button onClick={addMateriel} className="w-full bg-blue-500 hover:bg-blue-600">
+        <Button
+          onClick={addMateriel}
+          className="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white"
+        >
           Ajouter un matériel
         </Button>
       </div>
 
-      <div className="mb-5">
-        <Button type="submit" disabled={isSubmitting} className="w-full bg-blue-500 hover:bg-blue-600">
-          {isSubmitting ? <FaSpinner className="animate-spin mr-2" /> : 'Enregistrer'}
+      <div className="flex justify-end space-x-4">
+        <Button
+          type="button"
+          onClick={() => router.push('/installations')}
+          className="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white"
+        >
+          Annuler
+        </Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white"
+        >
+          {isSubmitting ? (
+            <>
+              <FaSpinner className="animate-spin mr-2" />
+              Mise à jour...
+            </>
+          ) : (
+            'Enregistrer'
+          )}
         </Button>
       </div>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="dark:bg-slate-800 dark:text-gray-100">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold dark:text-gray-100">Confirmer la suppression</DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-300">
+              Êtes-vous sûr de vouloir supprimer ce matériel ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDialogOpen(false)}
+              className="border-gray-300 dark:border-slate-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+            >
+              Annuler
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (materielToDelete !== null) {
+                  removeMateriel(materielToDelete);
+                  setDialogOpen(false);
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white"
+            >
+              Supprimer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </form>
   );
 }

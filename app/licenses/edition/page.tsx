@@ -19,6 +19,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Licence {
   id: number;
@@ -145,16 +146,24 @@ export default function EditInstallationPage() {
 
   if (loading) {
     return (
-      <div>
-        <h1>Chargement ...</h1>
-      </div>
+      <div className="container w-1/2 py-1 mx-auto">
+      <Card className="p-8">
+        <Skeleton className="w-full h-48 mb-8" /> {/* Rectangle principal plus haut */}
+        <Skeleton className="w-3/4 h-8 mb-6" /> {/* Texte court plus grand */}
+        <Skeleton className="w-1/2 h-8 mb-6" /> {/* Texte plus court plus grand */}
+        <Skeleton className="w-2/3 h-8 mb-6" /> {/* Texte moyen plus grand */}
+        <Skeleton className="w-full h-24 mb-8" /> {/* Nouveau rectangle pour plus de volume */}
+        <Skeleton className="w-3/4 h-8" /> {/* Texte final plus grand */}
+      </Card>
+    </div>
+
     );
   }
 
   return (
     <>
-      <div className="container mx-auto py-4">
-        <Card className="shadow-md max-w-2xl mx-auto dark:bg-slate-800 dark:border-slate-700">
+      <div className="container py-4 mx-auto">
+        <Card className="max-w-2xl mx-auto shadow-md dark:bg-slate-800 dark:border-slate-700">
           <CardHeader>
             <CardTitle className="text-2xl font-bold heading-primary">Édition de l'Installation N°{installation.id}</CardTitle>
           </CardHeader>
@@ -191,7 +200,7 @@ export default function EditInstallationPage() {
                   value={installation.organisation}
                   onChange={handleInputChange}
                   disabled
-                  className="input bg-gray-100 dark:bg-slate-700 dark:text-slate-300"
+                  className="bg-gray-100 input dark:bg-slate-700 dark:text-slate-300"
                 />
               </div>
               <div className="space-y-2">

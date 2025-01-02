@@ -210,7 +210,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-800">
+    <div className="">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
@@ -317,6 +317,37 @@ export default function HomePage() {
                   <span className="text-gray-600 dark:text-gray-300">Total remplacements</span>
                   <Badge variant="secondary" className="text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30">
                     {totals.remplacements.license}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+           {/* Total Statistics */}
+           <Card className="border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md dark:bg-slate-800 dark:hover:bg-slate-700/50 transition-all duration-200 col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-gray-500" />
+                Statistiques Globales
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg dark:bg-gray-700">
+                  <span className="text-gray-600 dark:text-gray-300">Total Installations</span>
+                  <Badge variant="secondary" className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">
+                    {totals.installations.total}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg dark:bg-gray-700">
+                  <span className="text-gray-600 dark:text-gray-300">Total Remplacements</span>
+                  <Badge variant="secondary" className="text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30">
+                    {totals.remplacements.total}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg dark:bg-gray-700">
+                  <span className="text-gray-600 dark:text-gray-300">Total Équipements</span>
+                  <Badge variant="secondary" className="text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30">
+                    {totals.materiels + totals.licenses}
                   </Badge>
                 </div>
               </div>

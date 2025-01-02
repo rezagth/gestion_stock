@@ -19,8 +19,9 @@ export default function MaterielNavBar() {
   if (!isMaterielSection) return null
 
   return (
-    <nav className="shadow-sm bg-gradient-to-r from-blue-600 to-blue-600 dark:from-slate-900 dark:to-slate-700">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <nav className="
+     flex items-center top-20 left-0 right-0 z-50 w-full shadow-sm bg-gradient-to-r from-white to-blue-600 text-blue-600 dark:from-slate-900 dark:to-slate-700">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-16">
         <div className="flex justify-center h-12">
           <div className="hidden sm:flex sm:space-x-8">
             {navItems.map((item) => {
@@ -31,7 +32,7 @@ export default function MaterielNavBar() {
                   href={item.href}
                   className={`
                     ${isActive
-                      ? 'border-b-2 border-white text-white'
+                      ? 'border-b-2 border-white text-blue-600'
                       : 'border-transparent text-blue-50 hover:text-white'
                     } 
                     inline-flex items-center px-3 pt-1 text-sm font-medium

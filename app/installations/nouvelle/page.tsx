@@ -187,7 +187,7 @@ export default function CreateInstallation() {
                 )}
               </Card>
             ))}
-            <Button variant="outline" onClick={addMateriel} className="mt-4">
+            <Button variant="outline" onClick={addMateriel} className="mt-4 bg-blue-700 text-white hover:bg-blue-800">
               Ajouter un matériel
             </Button>
           </div>
@@ -201,7 +201,7 @@ export default function CreateInstallation() {
             Annuler
           </Button>
           <Button type="submit" disabled={loading} 
-              className="py-4 text-white transition-colors bg-gray-500 rounded-lg px-9 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700">
+              className="py-4 text-white transition-colors bg-blue-700 hover:bg-blue-800  rounded-lg px-9 ">
               {loading ? 'Création en cours...' : 'Créer l\'installation'}
             </Button>
           </div>

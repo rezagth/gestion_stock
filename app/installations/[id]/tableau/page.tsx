@@ -353,17 +353,23 @@ export default function TableauInstallation() {
   };
 
   if (loading) {
-    // skeleton loading
     return (
-      <div className="space-y-6 p-6">
-        {/* Bloc 1 */}
-        <Skeleton className="h-48 w-full bg-gray-200 animate-pulse rounded-lg"></Skeleton>
-        {/* Bloc 2 */}
-        <Skeleton className="h-48 w-full bg-gray-200 animate-pulse rounded-lg"></Skeleton>
+      <div className="container py-10 mx-auto">
+        <div className="grid gap-4">
+          {[...Array(3)].map((_, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <Skeleton className="h-6 mb-4" />
+                <Skeleton className="h-4 mb-2" />
+                <Skeleton className="h-4 mb-2" />
+                <Skeleton className="h-4" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
-
   return (
     <div className="container mx-auto p-6 space-y-8">
       <div className="flex justify-end mb-4 ">

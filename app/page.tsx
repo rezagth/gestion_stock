@@ -226,7 +226,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-12">
           <Link href="/installations/" className="w-full">
             <Button 
-              className="w-full h-16 text-lg gap-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200"
+              className="w-full h-16 text-lg gap-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200 dark:hover:text-white"
             >
               <Box className="w-6 h-6" />
               Liste des installations matériels
@@ -234,7 +234,7 @@ export default function HomePage() {
           </Link>
           <Link href="/licenses/" className="w-full">
             <Button 
-              className="w-full h-16 text-lg gap-3 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition-colors duration-200"
+              className="w-full h-16 text-lg gap-3 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 transition-colors duration-200 dark:hover:text-white"
             >
               <Box className="w-6 h-6" />
               Liste des installations licences

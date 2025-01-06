@@ -18,7 +18,7 @@ export default function LicensesNavBar() {
 
   return (
     <nav className="
-     flex items-center top-20 left-0 right-0 z-50 w-full shadow-sm bg-gradient-to-r from-white to-blue-600 text-blue-600 dark:from-slate-900 dark:to-slate-700">
+     flex items-center top-20 left-0 right-0 z-50 w-full shadow-sm bg-gradient-to-r from-white to-blue-600 text-blue-600 dark:from-slate-900 dark:to-slate-700 text-center mt-0">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-16">
         <div className="flex justify-center h-12">
           <div className="hidden sm:flex sm:space-x-8">

@@ -218,13 +218,13 @@ export default function EditInstallationForm({ installation }: EditInstallationF
             </div>
             <Dialog>
               <DialogTrigger asChild>
-                <button
+                <Button
                   type="button"
-                  onClick={() => setSelectedMateriel(materiel)}
-                  className="text-red-500 hover:text-red-700 focus:outline-none"
+                  onClick={(  ) => setSelectedMateriel(materiel)}
+                  variant={"destructive"}
                 >
                   Supprimer le matériel
-                </button>
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogTitle>Êtes-vous sûr ?</DialogTitle>

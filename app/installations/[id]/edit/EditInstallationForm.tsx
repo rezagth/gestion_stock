@@ -9,6 +9,8 @@ import { toast } from 'react-toastify'; // Toastify notification
 
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 interface EditInstallationFormProps {
   installation: Installation & { materiels: Materiel[] };
@@ -173,7 +175,57 @@ export default function EditInstallationForm({ installation }: EditInstallationF
           </div>
         ))}
       </div>
-
+      <div className={sectionClass}>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-100">Informations de facturation</h2>
+        {['numeroFacture'].map(field => (
+          <div key={field} className="mb-6">
+            <label htmlFor={field} className={labelClass}>{capitalizeFirstLetter(field)}</label>
+            {isSubmitting ? (
+              <Skeleton className="w-full h-10 dark:bg-slate-700" />
+            ) : (
+              <Input
+                type="text"
+                id={field}
+                name={field}
+                value={formData[field] || ''}
+                onChange={handleChange}
+                className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
+              />
+            )}
+          </div>
+        ))}
+        <div className="mb-6">
+          <label htmlFor="dateFacture" className={labelClass}>Date de facture</label>
+          {isSubmitting ? (
+            <Skeleton className="w-full h-10 dark:bg-slate-700" />
+          ) : (
+            <Input
+              type="date"
+              id="dateFacture"
+              name="dateFacture"
+              value={formData.dateFacture ? new Date(formData.dateFacture).toISOString().split('T')[0] : ''}
+              onChange={handleChange}
+              className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
+            />
+          )}
+        </div>
+        {/* <div className="mb-6">
+          <label htmlFor="status" className={labelClass}>Statut</label>
+          {isSubmitting ? (
+            <Skeleton className="w-full h-10 dark:bg-slate-700" />
+          ) : (
+            <Select onValueChange={(value) => handleChange({ target: { name: 'status', value } } as any)}>
+              <SelectTrigger className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700">
+                <SelectValue placeholder="Sélectionnez un statut" />
+              </SelectTrigger>
+              <SelectContent className="dark:bg-slate-800">
+                <SelectItem value="ACTIVE" className="dark:text-gray-100">Active</SelectItem>
+                <SelectItem value="INACTIVE" className="dark:text-gray-100">Inactive</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </div> */}
+      </div>
       <div className={sectionClass}>
         <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Matériels</h2>
         {formData.materiels.map((materiel, index) => (

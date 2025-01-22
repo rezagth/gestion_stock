@@ -36,6 +36,12 @@ export default function EditInstallationForm({ installation }: EditInstallationF
     }));
   }, []);
 
+  const deleteEnterKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  }
+
   const addMateriel = useCallback(() => {
     setFormData(prev => ({
       ...prev,
@@ -169,6 +175,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                 onChange={handleChange}
                 className={`${inputClass} dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                 aria-describedby={`${field}-error`}
+                onKeyDown={deleteEnterKeyPress}
               />
             )}
             {errors[field] && <p id={`${field}-error`} className={errorClass}>{errors[field]}</p>}
@@ -176,12 +183,12 @@ export default function EditInstallationForm({ installation }: EditInstallationF
         ))}
       </div>
       <div className={sectionClass}>
-        <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-100">Informations de facturation</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-200">Informations de facturation</h2>
         {['numeroFacture'].map(field => (
           <div key={field} className="mb-6">
             <label htmlFor={field} className={labelClass}>{capitalizeFirstLetter(field)}</label>
             {isSubmitting ? (
-              <Skeleton className="w-full h-10 dark:bg-slate-700" />
+              <Skeleton className={skeletonClass} />
             ) : (
               <Input
                 type="text"
@@ -189,9 +196,12 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                 name={field}
                 value={formData[field] || ''}
                 onChange={handleChange}
-                className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
+                className={`${inputClass} dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                onKeyDown={deleteEnterKeyPress}
               />
             )}
+            {errors[field] && <p id={`${field}-error`} className={errorClass}>{errors[field]}</p>}
+           
           </div>
         ))}
         <div className="mb-6">
@@ -206,6 +216,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
               value={formData.dateFacture ? new Date(formData.dateFacture).toISOString().split('T')[0] : ''}
               onChange={handleChange}
               className="w-full dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
+              onKeyDown={deleteEnterKeyPress}
             />
           )}
         </div>
@@ -244,6 +255,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                     onChange={(e) => handleMaterielChange(index, e)}
                     className={`${inputClass} dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                     aria-describedby={`materiel_${index}_${field}-error`}
+                    onKeyDown={deleteEnterKeyPress}
                   />
                 )}
                 {errors[`materiel_${index}_${field}`] && (
@@ -265,6 +277,7 @@ export default function EditInstallationForm({ installation }: EditInstallationF
                   value={materiel.dateInstallation ? new Date(materiel.dateInstallation).toISOString().split('T')[0] : ''}
                   onChange={(e) => handleMaterielChange(index, e)}
                   className={`${inputClass} dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                  onKeyDown={deleteEnterKeyPress}
                 />
               )}
             </div>
